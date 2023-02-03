@@ -1,0 +1,76 @@
+import { View, SafeAreaView, StyleSheet, Text } from 'react-native'
+import ImagesCard from '../components/ImagesCard'
+
+export default function Details() {
+  return (
+    <SafeAreaView>
+        <View style={styles.body}>
+            <View style={styles.appBar}>
+                <View style={styles.icon}></View>
+                <View style={styles.icon}></View>
+            </View>
+            <ImagesCard/>
+            <Text style={styles.price}>20, 000 ksh</Text>
+            <View style={styles.more}>
+                <Text>x Bedrooms</Text>
+                <Text>x Bedrooms</Text>
+            </View>
+            <Text style={styles.address}>County, address</Text>
+            <Text style={styles.header}>Availability status</Text>
+            <Text style={styles.data}>Available</Text>
+            <Text style={styles.header}>Owner/renter</Text>
+            <Text style={styles.data}>Owner.email.com</Text>
+            <Text style={styles.data}>Telphone no</Text>
+        </View>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+    body:{
+        width:'100%',
+        height: '100%'
+    },
+    appBar:{
+        height: 50,
+        // backgroundColor: 'red',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    icon:{
+        height: 28,
+        width: 28,
+        borderRadius: 14,
+        backgroundColor: 'green'
+    },
+    price:{
+        color: 'green',
+        fontSize: 18,
+        marginVertical: 5,
+        paddingHorizontal: 20
+    },
+    more:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginVertical: 5
+    },
+    address:{
+        fontSize: 18,
+        paddingHorizontal: 20,
+    },
+    header:{
+        fontSize: 12,
+        paddingHorizontal: 20,
+        marginVertical: 5,
+    },
+    data:{
+        fontSize: 17,
+        marginVertical: 5,
+        paddingHorizontal: 20
+    }
+})
