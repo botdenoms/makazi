@@ -1,13 +1,17 @@
-import { View, SafeAreaView, StyleSheet, Text } from 'react-native'
+import { View, SafeAreaView, StyleSheet, Text, Pressable } from 'react-native'
 import ImagesCard from '../components/ImagesCard'
 
-export default function Details() {
+export default function Details({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
-                <View style={styles.icon}></View>
-                <View style={styles.icon}></View>
+                <Pressable onPress={()=>navigation.goBack()}>
+                    <View style={styles.icon}></View>
+                </Pressable>
+                <Pressable onPress={()=>navigation.navigate('Map')}>
+                    <View style={styles.icon}></View>
+                </Pressable>
             </View>
             <ImagesCard/>
             <Text style={styles.price}>20, 000 ksh</Text>

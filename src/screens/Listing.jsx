@@ -1,12 +1,14 @@
 import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable } from 'react-native'
 import CustomInput from '../components/CustomInput'
 
-export default function Listing() {
+export default function Listing({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
+              <Pressable onPress={()=> navigation.goBack()}>
                 <View style={styles.icon}></View>
+              </Pressable>
             </View>
             <ScrollView>
               <Text>Add Listing</Text>

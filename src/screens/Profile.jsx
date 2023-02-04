@@ -1,14 +1,22 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'react-native'
 import ListingCard from '../components/ListingCard'
 
-export default function Profile() {
+export default function Profile({navigation}) {
   return (
     <SafeAreaView>
         <View style={StyleSheet.body}>
-            <View style={styles.float}></View>
+            <View style={{position: 'absolute', top: '50%', right: 10, zIndex: 2}}>
+                <Pressable onPress={()=> navigation.navigate('Listing')}>
+                    <View style={styles.float}></View>
+                </Pressable>
+            </View>
             <View style={styles.appBar}>
-                <View style={styles.icon}></View>
-                <View style={styles.icon}></View>
+                <Pressable onPress={()=> navigation.goBack()}>
+                    <View style={styles.icon}></View>
+                </Pressable>
+                <Pressable onPress={()=> navigation.navigate('Accounts')}>
+                    <View style={styles.icon}></View>
+                </Pressable>
             </View>
             <Text style={styles.textbox}>User name</Text>
             <Text style={styles.textbox}>Telephone no</Text>
@@ -53,10 +61,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'green'
     },
     float:{
-        position: 'absolute',
-        // bottom: '20%',
-        top: '50%',
-        right: 10,
+        // position: 'absolute',
+        // // bottom: '20%',
+        // top: '50%',
+        // right: 10,
         zIndex: 5,
         height: 48,
         width: 48,

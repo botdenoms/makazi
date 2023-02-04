@@ -2,12 +2,14 @@ import { View, StyleSheet, SafeAreaView, ScrollView, TextInput, Pressable , Text
 import CustomInput from '../components/CustomInput'
 import ResultCard from '../components/ResultCard'
 
-export default function Search() {
+export default function Search({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
-                <View style={styles.icon}></View>
+                <Pressable onPress={()=>navigation.goBack()}>
+                    <View style={styles.icon}></View>
+                </Pressable>
             </View>
             <ScrollView>
             <TextInput placeholder='Rent Amount'/>

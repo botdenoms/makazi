@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 
-export default function HouseCard() {
+export default function HouseCard({to}) {
   return (
-    <View style={styles.card}>
-      <Text>HouseCard</Text>
-    </View>
+    <Pressable onPress={()=> to()}>
+      <View style={styles.card}>
+        <Text>HouseCard</Text>
+      </View>
+    </Pressable>
   )
 }
 

@@ -1,11 +1,13 @@
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
+import { View, SafeAreaView, StyleSheet, Pressable } from 'react-native'
 
-export default function Map() {
+export default function Map({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
+              <Pressable onPress={()=> navigation.goBack()}>
                 <View style={styles.icon}></View>
+              </Pressable>
             </View>
         </View>
     </SafeAreaView>

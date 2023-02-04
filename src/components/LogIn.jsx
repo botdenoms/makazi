@@ -1,7 +1,7 @@
 import { View, Text, TextInput,Pressable, StyleSheet} from 'react-native'
 import React from 'react'
 
-export default function LogIn({toggle}) {
+export default function LogIn({toggle, stack}) {
     return (
         <View style={styles.body}>
           <View style={styles.header}>
@@ -27,9 +27,9 @@ export default function LogIn({toggle}) {
             secureTextEntry={true}
           />
           <View style={styles.center}>
-            <Pressable>
+            <Pressable onPress={()=>stack.navigate('profile')}>
               <View style={styles.button}>
-                <Text>SignUp</Text>
+                <Text>Log in</Text>
               </View>
           </Pressable>
           </View>

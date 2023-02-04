@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { View, StyleSheet, SafeAreaView } from 'react-native'
+import { View, StyleSheet, SafeAreaView, Pressable } from 'react-native'
 import LogIn from '../components/LogIn'
 import SIgnUp from '../components/SIgnUp'
 
-export default function Accounts() {
+export default function Accounts({navigation}) {
     const [user, setUser] = useState(false)
     const toggle = ()=>{
         setUser(!user)
@@ -11,9 +11,11 @@ export default function Accounts() {
   return (
     <SafeAreaView>
         <View style={styles.body}>
-            <View style={styles.icon}></View>
+            <Pressable onPress={()=>navigation.goBack()}>
+                <View style={styles.icon}></View>
+            </Pressable>
             {
-                user == true?<LogIn toggle={toggle}/>:<SIgnUp toggle={toggle}/>
+                user == true?<LogIn toggle={toggle} stack={navigation}/>:<SIgnUp toggle={toggle}/>
             }
         </View>
     </SafeAreaView>
