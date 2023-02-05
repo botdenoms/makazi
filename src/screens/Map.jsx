@@ -1,12 +1,15 @@
 import { View, SafeAreaView, StyleSheet, Pressable } from 'react-native'
 
+import { ChevronLeftIcon } from "react-native-heroicons/solid"
+
 export default function Map({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
               <Pressable onPress={()=> navigation.goBack()}>
-                <View style={styles.icon}></View>
+                {/* <View style={styles.icon}></View> */}
+                <ChevronLeftIcon size={28} color='#1e1e1e'/>
               </Pressable>
             </View>
         </View>

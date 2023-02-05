@@ -1,13 +1,16 @@
 import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable } from 'react-native'
 import CustomInput from '../components/CustomInput'
 
+import { ChevronLeftIcon } from "react-native-heroicons/solid"
+
 export default function Listing({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
               <Pressable onPress={()=> navigation.goBack()}>
-                <View style={styles.icon}></View>
+                {/* <View style={styles.icon}></View> */}
+                <ChevronLeftIcon size={28} color='#1e1e1e'/>
               </Pressable>
             </View>
             <ScrollView>

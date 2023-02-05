@@ -1,16 +1,20 @@
 import { View, SafeAreaView, StyleSheet, Text, Pressable } from 'react-native'
 import ImagesCard from '../components/ImagesCard'
 
+import { ChevronLeftIcon, MapPinIcon } from "react-native-heroicons/solid"
+
 export default function Details({navigation}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
                 <Pressable onPress={()=>navigation.goBack()}>
-                    <View style={styles.icon}></View>
+                    {/* <View style={styles.icon}></View> */}
+                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
                 </Pressable>
                 <Pressable onPress={()=>navigation.navigate('Map')}>
-                    <View style={styles.icon}></View>
+                    {/* <View style={styles.icon}></View> */}
+                    <MapPinIcon size={28} color='#1e1e1e'/>
                 </Pressable>
             </View>
             <ImagesCard/>

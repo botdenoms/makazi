@@ -1,18 +1,23 @@
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'react-native'
 import ListingCard from '../components/ListingCard'
 
+import { ChevronLeftIcon, PlusIcon } from "react-native-heroicons/solid"
+
 export default function Profile({navigation}) {
   return (
     <SafeAreaView>
         <View style={StyleSheet.body}>
             <View style={{position: 'absolute', top: '50%', right: 10, zIndex: 2}}>
                 <Pressable onPress={()=> navigation.navigate('Listing')}>
-                    <View style={styles.float}></View>
+                    <View style={styles.float}>
+                        <PlusIcon size={28} color='#1e1e1e'/>
+                    </View>
                 </Pressable>
             </View>
             <View style={styles.appBar}>
                 <Pressable onPress={()=> navigation.goBack()}>
-                    <View style={styles.icon}></View>
+                    {/* <View style={styles.icon}></View> */}
+                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
                 </Pressable>
                 <Pressable onPress={()=> navigation.navigate('Accounts')}>
                     <View style={styles.icon}></View>
@@ -65,6 +70,8 @@ const styles = StyleSheet.create({
         // // bottom: '20%',
         // top: '50%',
         // right: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
         zIndex: 5,
         height: 48,
         width: 48,
