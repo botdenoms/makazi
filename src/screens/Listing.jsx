@@ -12,15 +12,18 @@ export default function Listing({navigation}) {
                 {/* <View style={styles.icon}></View> */}
                 <ChevronLeftIcon size={28} color='#1e1e1e'/>
               </Pressable>
+              <Text style={[{fontSize: 18}, styles.text]}>Add Listing</Text>
+              <View style={{width: 28}}></View>
             </View>
             <ScrollView>
-              <Text>Add Listing</Text>
-              <Text>Location</Text>
-              <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
-                <TextInput placeholder='County'/>
-                <TextInput placeholder='Address'/>
+              <Text style={styles.text}>Description</Text>
+              <TextInput style={styles.input} placeholder='Description'/>
+              <Text style={styles.text}>Location</Text>
+              <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
+                <TextInput style={styles.input} placeholder='County'/>
+                <TextInput style={styles.input} placeholder='Address'/>
               </View>
-              <View style={{height: 100, width: '100%', backgroundColor: 'red'}}></View>
+              <View style={{height: 150, width: '100%', backgroundColor: 'red'}}></View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable>
                   <View style={styles.button}>
@@ -32,9 +35,11 @@ export default function Listing({navigation}) {
                 <CustomInput title='Bedrooms' type={0}/>
                 <CustomInput title='Bathrooms' type={0}/>
               </View>
-              <CustomInput title='Rent/Cost' type={1}/>
-              <Text>Availability</Text>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{justifyContent: 'center', alignItems:'flex-start', paddingHorizontal: 20}}>
+                <CustomInput title='Rent/Cost' type={1}/>
+              </View>
+              <Text style={styles.text}>Availability</Text>
+              <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
                 <Pressable>
                   <View style={styles.button}>
                     <Text>Available</Text>
@@ -46,11 +51,13 @@ export default function Listing({navigation}) {
                   </View>
                 </Pressable>
               </View>
-              <Pressable>
-                  <View style={styles.button}>
-                    <Text>Publish</Text>
-                  </View>
-              </Pressable>
+              <View style={{justifyContent: 'center', alignItems:'center'}}>
+                <Pressable>
+                    <View style={styles.button}>
+                      <Text>Publish</Text>
+                    </View>
+                </Pressable>
+              </View>
             </ScrollView>
         </View>
     </SafeAreaView>
@@ -59,24 +66,24 @@ export default function Listing({navigation}) {
 
 const styles = StyleSheet.create({
   body:{
-      width:'100%',
-      height: '100%'
+    width:'100%',
+    height: '100%'
   },
   appBar:{
-      height: 50,
-      // backgroundColor: 'red',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 10
+    height: 50,
+    // backgroundColor: 'red',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10
   },
   icon:{
-      height: 28,
-      width: 28,
-      borderRadius: 14,
-      backgroundColor: 'green'
+    height: 28,
+    width: 28,
+    borderRadius: 14,
+    backgroundColor: 'green'
   },
   button:{
     marginVertical: 10,
@@ -86,5 +93,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: "center",
     alignItems:"center"
+  },
+  input:{
+    height: 40,
+    paddingLeft: 10,
+    borderRadius: 5,
+    borderColor: '#1e1e1e',
+    borderWidth: 1,
+    marginVertical: 5,
+    marginHorizontal: 20
+  },
+  text:{
+    paddingHorizontal: 20,
+    fontSize: 16,
   }
 })

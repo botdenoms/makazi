@@ -34,7 +34,7 @@ export default function Home({ navigation }) {
             <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
                 <Pressable onPress={()=> navigation.navigate('Search')}>
                     <View style={styles.float}>
-                        <MagnifyingGlassIcon size={28} color='#1e1e1e'/>
+                        <MagnifyingGlassIcon size={28} color='#fff'/>
                     </View>
                 </Pressable>
             </View>
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     scroll:{
         flex: 1,
         paddingHorizontal: 10,
+        // marginBottom: 10,
         paddingTop: 5,
         // backgroundColor: 'green'
     },
@@ -82,6 +83,6 @@ const styles = StyleSheet.create({
         height: 48,
         width: 48,
         borderRadius: 24,
-        backgroundColor: 'green'
+        backgroundColor: '#1e1e1e'
     }
 })

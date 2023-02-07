@@ -4,7 +4,7 @@ export default function SIgnUp({toggle}) {
   return (
     <View style={styles.body}>
       <View style={styles.header}>
-        <Text>Welcome to Makazi</Text>
+        <Text style={{fontSize: 18}}>Welcome to Makazi</Text>
       </View>
       <TextInput
         style={styles.input}
@@ -34,7 +34,7 @@ export default function SIgnUp({toggle}) {
       </View>
       <View style={styles.center}>
         <Pressable onPress={()=>toggle()}>
-          <Text >Have an account, Login</Text>
+          <Text >Already have an account, Login</Text>
         </Pressable>  
       </View>
     </View>
@@ -42,35 +42,38 @@ export default function SIgnUp({toggle}) {
 }
 
 const styles = StyleSheet.create({
-    body:{
-        paddingVertical: 10,
-        flexDirection: 'column'
-    },
-    center:{
-      flexDirection: 'row',
-      justifyContent: "center",
-      alignItems: "center"
-    },
-    header:{
-      marginHorizontal: 20,
-      marginVertical: 10,
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: "center"
-    },
-    input:{
-        height: 40,
-        backgroundColor: '#1e1e1e',
-        marginVertical: 5,
-        marginHorizontal: 20
-    },
-    button:{
-        marginVertical: 10,
-        paddingHorizontal: 40,
-        paddingVertical: 10,
-        backgroundColor: 'grey',
-        marginHorizontal: 20,
-        justifyContent: "center",
-        alignItems:"center"
-    }
+  body:{
+    // paddingVertical: 10,
+    flexDirection: 'column'
+  },
+  center:{
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  header:{
+    marginHorizontal: 20,
+    marginVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: "center"
+  },
+  input:{
+    height: 40,
+    borderRadius: 5,
+    borderColor: '#1e1e1e',
+    paddingLeft: 10,
+    borderWidth: 1,
+    marginVertical: 5,
+    marginHorizontal: 20
+  },
+  button:{
+    marginVertical: 10,
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    backgroundColor: 'grey',
+    marginHorizontal: 20,
+    justifyContent: "center",
+    alignItems:"center"
+  }
 })

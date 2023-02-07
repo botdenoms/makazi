@@ -20,8 +20,8 @@ export default function Details({navigation}) {
             <ImagesCard/>
             <Text style={styles.price}>20, 000 ksh</Text>
             <View style={styles.more}>
-                <Text>x Bedrooms</Text>
-                <Text>x Bedrooms</Text>
+                <Text style={styles.dataextra}>1 Bedrooms</Text>
+                <Text style={styles.dataextra}>1 Bathrooms</Text>
             </View>
             <Text style={styles.address}>County, address</Text>
             <Text style={styles.header}>Availability status</Text>
@@ -80,5 +80,9 @@ const styles = StyleSheet.create({
         fontSize: 17,
         marginVertical: 5,
         paddingHorizontal: 20
-    }
+    },
+    dataextra:{
+        fontSize: 16,
+        marginVertical: 5,
+    },
 })
