@@ -1,7 +1,18 @@
 import { View, Text, TextInput,Pressable, StyleSheet} from 'react-native'
-import React from 'react'
+import {useState} from 'react'
 
 export default function LogIn({toggle, stack}) {
+
+  const [name, setName] = useState('')
+  const [telephone, setTelephone] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const logIn = ()=>{
+    // log in checks & create user obj
+    stack.navigate('profile')
+  }
+
   return (
     <View style={styles.body}>
       <View style={styles.header}>
@@ -9,25 +20,33 @@ export default function LogIn({toggle, stack}) {
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Name" 
+        placeholder="Name"
+        onChangeText={(t)=> setName(t)}
+        value={name}
       />
       <TextInput
         style={styles.input}
         placeholder="07....."
         keyboardType="phone-pad"
+        onChangeText={(t)=> setTelephone(t)}
+        value={telephone}
       />
       <TextInput
         style={styles.input}
         placeholder="email@name.com"
         keyboardType="email-address"
+        onChangeText={(t)=> setEmail(t)}
+        value={email}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry={true}
+        onChangeText={(t)=> setPassword(t)}
+        value={password}
       />
       <View style={styles.center}>
-        <Pressable onPress={()=>stack.navigate('profile')}>
+        <Pressable onPress={()=>logIn()}>
           <View style={styles.button}>
             <Text>Log in</Text>
           </View>

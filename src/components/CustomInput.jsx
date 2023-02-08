@@ -1,10 +1,14 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 
-export default function CustomInput({title, type}) {
+export default function CustomInput({title, type, handleChange}) {
+  
   return (
     <View style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
       <Text>{title}</Text>
-      <TextInput style={styles.input} placeholder={type == 0? '1': '1, 000 ks'}/>
+      <TextInput 
+        style={styles.input} 
+        placeholder={type == 0? '1': '1, 000 ks'} 
+        onChangeText={()=> handleChange}/>
     </View>
   )
 }

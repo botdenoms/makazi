@@ -2,8 +2,31 @@ import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable 
 import CustomInput from '../components/CustomInput'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
+import { useState } from 'react'
 
 export default function Listing({navigation}) {
+
+  const [descrip, setDescrip] = useState('')
+  const [county, setCounty] = useState('')
+  const [adress, setAdress] = useState('')
+  const [bed, setBed] = useState(1)
+  const [bath, setBath] = useState(1)
+  const [rent, setRent] = useState(1)
+  const [images, setImages] = useState([1, 2, 3])
+  const [avail, setAvail] = useState(false)
+
+  const toggleAvail = ()=>{
+    setAvail(!avail)
+  }
+
+  const addListing = () =>{
+    // add new listing, check if valid
+  }
+
+  const stringValue = (text)=>{
+    return `${text}`
+  }
+
   return (
     <SafeAreaView>
         <View style={styles.body}>
@@ -17,13 +40,36 @@ export default function Listing({navigation}) {
             </View>
             <ScrollView>
               <Text style={styles.text}>Description</Text>
-              <TextInput style={styles.input} placeholder='Description'/>
+              <TextInput 
+                style={styles.input} 
+                placeholder='Description'
+                onChangeText={(t)=> setDescrip(t)}
+                value={descrip}/>
               <Text style={styles.text}>Location</Text>
               <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
-                <TextInput style={styles.input} placeholder='County'/>
-                <TextInput style={styles.input} placeholder='Address'/>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder='County'
+                  onChangeText={(t)=> setCounty(t)}
+                  value={county}/>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder='Address'
+                  onChangeText={(t)=> setAdress(t)}
+                  value={adress}/>
               </View>
-              <View style={{height: 150, width: '100%', backgroundColor: 'red'}}></View>
+              <View style={{height: 150, width: '100%', paddingHorizontal: 10}}>
+                <ScrollView horizontal={true}>
+                  {
+                    images.map((u)=> {
+                      return (
+                        <View style={{width: 150, height: '100%', backgroundColor: 'red', marginHorizontal: 2}} key={u}>
+                        </View>
+                      )
+                    })
+                  }
+                </ScrollView>
+              </View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable>
                   <View style={styles.button}>
@@ -32,22 +78,19 @@ export default function Listing({navigation}) {
                 </Pressable>
               </View>
               <View style={{justifyContent: 'space-between', paddingHorizontal: 20, flexDirection: 'row'}}>
-                <CustomInput title='Bedrooms' type={0}/>
-                <CustomInput title='Bathrooms' type={0}/>
+                <CustomInput title='Bedrooms' type={0} handleChange={setBed} />
+                <CustomInput title='Bathrooms' type={0} handleChange={setBath} />
               </View>
               <View style={{justifyContent: 'center', alignItems:'flex-start', paddingHorizontal: 20}}>
-                <CustomInput title='Rent/Cost' type={1}/>
+                <CustomInput title='Rent/Cost' type={1} handleChange={setRent}/>
               </View>
               <Text style={styles.text}>Availability</Text>
-              <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
-                <Pressable>
+              <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
+                <Pressable onPress={()=> toggleAvail()}>
                   <View style={styles.button}>
-                    <Text>Available</Text>
-                  </View>
-                </Pressable>
-                <Pressable>
-                  <View style={styles.button}>
-                    <Text>Un Available</Text>
+                    {
+                      avail? <Text>Available</Text> :<Text>UnAvailable</Text>
+                    }
                   </View>
                 </Pressable>
               </View>

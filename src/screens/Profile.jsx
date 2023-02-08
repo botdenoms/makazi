@@ -2,8 +2,20 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'rea
 import ListingCard from '../components/ListingCard'
 
 import { ChevronLeftIcon, PlusIcon, UsersIcon } from "react-native-heroicons/solid"
+import { useState } from 'react'
 
 export default function Profile({navigation}) {
+
+    const [listings, setlistings] = useState([1])
+
+    const getlistings = ()=>{
+        // fetch users listings
+        setlistings([])
+    }
+
+    const updatelisting = ()=>{
+        // update the value of listing
+    }
   return (
     <SafeAreaView>
         <View style={StyleSheet.body}>
@@ -22,11 +34,12 @@ export default function Profile({navigation}) {
                     <Text style={styles.textbox}>User@name.email</Text>
                     <Text style={styles.textbox}>My listings</Text>
                     <ScrollView style={{ paddingHorizontal: 10}}>
+                        {listings.map((l)=> <ListingCard key={l}/>)}
+                        {/* <ListingCard/>
                         <ListingCard/>
                         <ListingCard/>
                         <ListingCard/>
-                        <ListingCard/>
-                        <ListingCard/>
+                        <ListingCard/> */}
                     </ScrollView> 
                 </ScrollView>
             </View>
