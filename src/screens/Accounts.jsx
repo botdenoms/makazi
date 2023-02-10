@@ -10,11 +10,19 @@ export default function Accounts({navigation}) {
     const toggle = ()=>{
         setUser(!user)
     }
+
+    const exit = ()=>{
+        if (user){
+            navigation.goBack()
+        }else{
+            navigation.navigate('Home')
+        }
+    }
   return (
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
-                <Pressable onPress={()=>navigation.goBack()}>
+                <Pressable onPress={()=> exit()}>
                     {/* <View style={styles.icon}></View> */}
                     <ChevronLeftIcon size={28} color='#1e1e1e'/>
                 </Pressable>

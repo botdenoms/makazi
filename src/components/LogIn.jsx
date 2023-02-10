@@ -1,16 +1,28 @@
 import { View, Text, TextInput,Pressable, StyleSheet} from 'react-native'
 import {useState} from 'react'
 
+import auth from '@react-native-firebase/auth'
+
 export default function LogIn({toggle, stack}) {
 
-  const [name, setName] = useState('')
-  const [telephone, setTelephone] = useState('')
+  // const [name, setName] = useState('')
+  // const [telephone, setTelephone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const logIn = ()=>{
+    if (email === '' || password === '') {
+      console.log('empty email or pass')
+      return
+    }
+    console.log('no empty stuff')
     // log in checks & create user obj
-    stack.navigate('profile')
+    auth().signInWithEmailAndPassword(email, password).then((e)=>{
+      console.log(`signed in as ${e.user.email}`)
+      stack.navigate('profile')
+    }).catch((e)=>{
+      console.log(`this error: ${e}`)
+    })
   }
 
   return (
@@ -18,7 +30,7 @@ export default function LogIn({toggle, stack}) {
       <View style={styles.header}>
         <Text style={{fontSize: 18}}>Welcome Back</Text>
       </View>
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Name"
         onChangeText={(t)=> setName(t)}
@@ -30,7 +42,7 @@ export default function LogIn({toggle, stack}) {
         keyboardType="phone-pad"
         onChangeText={(t)=> setTelephone(t)}
         value={telephone}
-      />
+      /> */}
       <TextInput
         style={styles.input}
         placeholder="email@name.com"

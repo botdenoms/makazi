@@ -1,12 +1,28 @@
 import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'react-native'
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+
 import HouseCard from '../components/HouseCard'
 
 import { MagnifyingGlassIcon, UserCircleIcon } from "react-native-heroicons/solid"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home({ navigation }) {
-    const toDetails = ()=>{
-        navigation.navigate('Details')
+
+    const [houses, setHouses] = useState([])
+    const [user, setUser] = useState(null)
+    // const [idx, setIdx] = useState(0)
+
+    const ref = firestore().collection('listings')
+
+    useEffect(()=>{
+        loadHouses()
+        const subscriber = auth().onAuthStateChanged(loadUser)
+        return subscriber
+    }, [])
+
+    const toDetails = (index)=>{
+        navigation.navigate('Details', { ...houses[index]})
     }
 
     const toAccounts = ()=>{
@@ -17,18 +33,29 @@ export default function Home({ navigation }) {
         }
     }
 
-    const loadUser = ()=>{
-        //local storage load user
-        setUser('user')
+    const loadUser = async (user)=>{
+        if (user) {
+            setUser(user)
+          } else {
+            // Signed out
+            setUser(null)
+          }
     }
 
-    const loadHouses = ()=>{
+    const loadHouses = async ()=>{
         // request data
-        setHouses([])
+        const lst = await (await ref.get()).docs
+        const temp = []
+        for (let index = 0; index < lst.length; index++) {
+            const element = {
+                id : lst[index].id,
+                ...lst[index].data()
+            }
+            temp.push(element)
+        }
+        setHouses([...temp])
+        
     }
-
-    const [houses, setHouses] = useState([1,2,3])
-    const [user, setUser] = useState(null)
 
     return (
         <SafeAreaView>
@@ -45,7 +72,7 @@ export default function Home({ navigation }) {
                 >
                     <Text>Featured</Text>
                     {
-                        houses.map((h)=> <HouseCard to={toDetails} key={h}/>)
+                        houses.map((h, i)=> <HouseCard to={toDetails} key={h.id} data={h} index={i}/>)
                     }
                     {/* <HouseCard to={toDetails}/>
                     <HouseCard to={toDetails}/>

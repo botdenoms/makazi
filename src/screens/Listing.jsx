@@ -1,10 +1,15 @@
 import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable } from 'react-native'
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+
 import CustomInput from '../components/CustomInput'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
 import { useState } from 'react'
 
 export default function Listing({navigation}) {
+
+  const ref = firestore().collection('listings')
 
   const [descrip, setDescrip] = useState('')
   const [county, setCounty] = useState('')
@@ -13,18 +18,52 @@ export default function Listing({navigation}) {
   const [bath, setBath] = useState(1)
   const [rent, setRent] = useState(1)
   const [images, setImages] = useState([1, 2, 3])
-  const [avail, setAvail] = useState(false)
+  const [avail, setAvail] = useState(true)
+  const [rental, setRental] = useState(true)
+  const [geo, setGeo] = useState([])
 
   const toggleAvail = ()=>{
     setAvail(!avail)
   }
 
-  const addListing = () =>{
-    // add new listing, check if valid
+  const clearInputs = ()=>{
+    setDescrip('')
+    setCounty('')
+    setAdress('')
+    setBath(0)
+    setBed(0)
+    setRent(0),
+    setImages([])
+    setGeo([])
   }
 
-  const stringValue = (text)=>{
-    return `${text}`
+  const addListing = async () =>{
+    // check if input fields are valid
+    if(images.length < 1 || descrip === '' || county === '' || adress === ''){
+      console.log('empty fieild found')
+    }else{
+      // create a listing
+      if (auth().currentUser.uid !== null) {
+        console.log(`user id: ${auth().currentUser.uid}`)
+        const _documentRef = await ref.doc().set({
+          owner: auth().currentUser.uid,
+          description: descrip,
+          location: `${county}, ${adress}`,
+          price: rent,
+          bathrooms: bath,
+          bedrooms: bed,
+          images,
+          rental,
+          availability: avail,
+          uploaded: Date.now(),
+          geoloc: geo
+        })
+        clearInputs()
+        // console.log(`doc id: ${documentRef}`)
+      }else{
+        console.log('no user found')
+      }
+    }
   }
 
   return (
@@ -46,20 +85,25 @@ export default function Listing({navigation}) {
                 onChangeText={(t)=> setDescrip(t)}
                 value={descrip}/>
               <Text style={styles.text}>Location</Text>
-              <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
+              <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                 <TextInput 
-                  style={styles.input} 
+                  style={[styles.input, {width: '40%'}]} 
                   placeholder='County'
                   onChangeText={(t)=> setCounty(t)}
                   value={county}/>
                 <TextInput 
-                  style={styles.input} 
+                  style={[styles.input, {width: '40%'}]}  
                   placeholder='Address'
                   onChangeText={(t)=> setAdress(t)}
                   value={adress}/>
               </View>
               <View style={{height: 150, width: '100%', paddingHorizontal: 10}}>
-                <ScrollView horizontal={true}>
+                {
+                  images.length < 1?
+                  <View style={{justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%'}}>
+                    <Text>no images uploaded</Text>
+                  </View>
+                  :<ScrollView horizontal={true}>
                   {
                     images.map((u)=> {
                       return (
@@ -69,6 +113,7 @@ export default function Listing({navigation}) {
                     })
                   }
                 </ScrollView>
+                }
               </View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable>
@@ -81,21 +126,51 @@ export default function Listing({navigation}) {
                 <CustomInput title='Bedrooms' type={0} handleChange={setBed} />
                 <CustomInput title='Bathrooms' type={0} handleChange={setBath} />
               </View>
+              <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+                <View>
+                  <Text style={styles.text}>Type</Text>
+                  <Pressable onPress={()=> setRental(!rental)}>
+                    <View style={styles.button}>
+                      {
+                        rental? <Text>Rental</Text> :<Text>Sale</Text>
+                      }
+                    </View>
+                  </Pressable>
+                </View>
+                <View >
+                  <Text style={styles.text}>Availability</Text>
+                  <Pressable onPress={()=> toggleAvail()}>
+                    <View style={styles.button}>
+                      {
+                        avail? <Text>Available</Text> :<Text>UnAvailable</Text>
+                      }
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
               <View style={{justifyContent: 'center', alignItems:'flex-start', paddingHorizontal: 20}}>
                 <CustomInput title='Rent/Cost' type={1} handleChange={setRent}/>
               </View>
-              <Text style={styles.text}>Availability</Text>
-              <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'center'}}>
-                <Pressable onPress={()=> toggleAvail()}>
-                  <View style={styles.button}>
-                    {
-                      avail? <Text>Available</Text> :<Text>UnAvailable</Text>
-                    }
-                  </View>
-                </Pressable>
+              <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
+                <View>
+                  <Text style={{paddingHorizontal: 10}}>Longitude</Text>
+                  <TextInput 
+                  style={styles.input} 
+                  placeholder='-180 to 180' 
+                  onChangeText={(t)=> setGeo([t, geo[1]])}
+                  />
+                </View>
+                <View>
+                  <Text style={{paddingHorizontal: 10}}>Latitude</Text>
+                  <TextInput 
+                  style={styles.input} 
+                  placeholder='-180 to 180' 
+                  onChangeText={(t)=> setGeo([geo[0], t])}
+                  />
+                </View>
               </View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
-                <Pressable>
+                <Pressable onPress={()=> addListing()}>
                     <View style={styles.button}>
                       <Text>Publish</Text>
                     </View>
@@ -144,7 +219,7 @@ const styles = StyleSheet.create({
     borderColor: '#1e1e1e',
     borderWidth: 1,
     marginVertical: 5,
-    marginHorizontal: 20
+    marginHorizontal: 10
   },
   text:{
     paddingHorizontal: 20,

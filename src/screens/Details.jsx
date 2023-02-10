@@ -3,7 +3,7 @@ import ImagesCard from '../components/ImagesCard'
 
 import { ChevronLeftIcon, MapPinIcon } from "react-native-heroicons/solid"
 
-export default function Details({navigation}) {
+export default function Details({navigation, route}) {
   return (
     <SafeAreaView>
         <View style={styles.body}>
@@ -18,14 +18,14 @@ export default function Details({navigation}) {
                 </Pressable>
             </View>
             <ImagesCard/>
-            <Text style={styles.price}>20, 000 ksh</Text>
+            <Text style={styles.price}>{route.params.price} ksh</Text>
             <View style={styles.more}>
-                <Text style={styles.dataextra}>1 Bedrooms</Text>
-                <Text style={styles.dataextra}>1 Bathrooms</Text>
+                <Text style={styles.dataextra}>{route.params.bedrooms} Bedrooms</Text>
+                <Text style={styles.dataextra}>{route.params.bathrooms} Bathrooms</Text>
             </View>
-            <Text style={styles.address}>County, address</Text>
+            <Text style={styles.address}>{route.params.location}</Text>
             <Text style={styles.header}>Availability status</Text>
-            <Text style={styles.data}>Available</Text>
+            <Text style={styles.data}>{route.params.availability == 1?'Available':'Unavailable'}</Text>
             <Text style={styles.header}>Owner/renter</Text>
             <Text style={styles.data}>Owner.email.com</Text>
             <Text style={styles.data}>Telphone no</Text>

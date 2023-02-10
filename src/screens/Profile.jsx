@@ -2,57 +2,106 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'rea
 import ListingCard from '../components/ListingCard'
 
 import { ChevronLeftIcon, PlusIcon, UsersIcon } from "react-native-heroicons/solid"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 export default function Profile({navigation}) {
 
-    const [listings, setlistings] = useState([1])
+    const ref = firestore().collection('users')
+    const refList = firestore().collection('listings')
+    const [current, setCurrent] = useState({})
 
-    const getlistings = ()=>{
+    useEffect(()=>{
+        getUser()
+        getlistings()
+    }, [])
+
+    const [listings, setlistings] = useState([])
+
+    const getlistings = async ()=>{
         // fetch users listings
-        setlistings([])
+        if(auth().currentUser.uid !== null){
+            const req = await refList.where('owner', '==', auth().currentUser.uid).get()
+            // console.log(req.docs)
+            const lst = req.docs
+            const temp = []
+            for (let index = 0; index < lst.length; index++) {
+                const element = {
+                    id : lst[index].id,
+                    ...lst[index].data()
+                }
+                temp.push(element)
+            }
+            setlistings([...temp])
+        } else {
+            console.log('no current listings')
+        }
+    }
+
+    const getUser = async ()=>{
+        if(auth().currentUser.uid !== null){
+            const doc = await ref.doc(auth().currentUser.uid).get()
+            setCurrent(doc.data())
+        } else {
+            console.log('no user currently')
+        }
+    }
+
+    const logOut = ()=>{
+        auth().signOut().then(() => console.log('User signed out!'))
+        navigation.navigate('Accounts')
+    }
+
+    const exit = ()=>{
+        if (auth().currentUser.uid !== null) {
+            navigation.navigate('Home')
+        }else{
+            navigation.navigate('Accounts')
+        }
     }
 
     const updatelisting = ()=>{
         // update the value of listing
     }
-  return (
-    <SafeAreaView>
-        <View style={StyleSheet.body}>
-            <View style={styles.appBar}>
-                <Pressable onPress={()=> navigation.goBack()}>
-                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
-                </Pressable>
-                <Pressable onPress={()=> navigation.navigate('Accounts')}>
-                    <UsersIcon size={28} color='#1e1e1e'/>
-                </Pressable>
+    return (
+        <SafeAreaView>
+            <View style={StyleSheet.body}>
+                <View style={styles.appBar}>
+                    <Pressable onPress={()=> exit()}>
+                        <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                    </Pressable>
+                    <Pressable onPress={()=> logOut()}>
+                        <UsersIcon size={28} color='#1e1e1e'/>
+                    </Pressable>
+                </View>
+                <View style={{height: '92%',width: '100%'}}>
+                    <ScrollView style={{width: '100%', height: '100%'}}>
+                    <Text style={styles.textbox}>{current.name}</Text>
+                        <Text style={styles.textbox}>{current.telephone}</Text>
+                        <Text style={styles.textbox}>{current.email}</Text>
+                        <Text style={styles.textbox}>My listings</Text>
+                        <ScrollView style={{ paddingHorizontal: 10}}>
+                            {listings.map((l)=> <ListingCard key={l.id} data={l}/>)}
+                            {/* <ListingCard/>
+                            <ListingCard/>
+                            <ListingCard/>
+                            <ListingCard/>
+                            <ListingCard/> */}
+                        </ScrollView> 
+                    </ScrollView>
+                </View>
+                <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
+                    <Pressable onPress={()=> navigation.navigate('Listing')}>
+                        <View style={styles.float}>
+                            <PlusIcon size={28} color='white'/>
+                        </View>
+                    </Pressable>
+                </View>
             </View>
-            <View style={{height: '92%',width: '100%'}}>
-                <ScrollView style={{width: '100%', height: '100%'}}>
-                <Text style={styles.textbox}>User name</Text>
-                    <Text style={styles.textbox}>Telephone no</Text>
-                    <Text style={styles.textbox}>User@name.email</Text>
-                    <Text style={styles.textbox}>My listings</Text>
-                    <ScrollView style={{ paddingHorizontal: 10}}>
-                        {listings.map((l)=> <ListingCard key={l}/>)}
-                        {/* <ListingCard/>
-                        <ListingCard/>
-                        <ListingCard/>
-                        <ListingCard/>
-                        <ListingCard/> */}
-                    </ScrollView> 
-                </ScrollView>
-            </View>
-            <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
-                <Pressable onPress={()=> navigation.navigate('Listing')}>
-                    <View style={styles.float}>
-                        <PlusIcon size={28} color='white'/>
-                    </View>
-                </Pressable>
-            </View>
-        </View>
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }
 
 

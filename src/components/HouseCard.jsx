@@ -1,22 +1,22 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import {CameraIcon} from "react-native-heroicons/solid"
 
-export default function HouseCard({to}) {
+export default function HouseCard({to, data, index}) {
   return (
-    <Pressable onPress={()=> to()}>
+    <Pressable onPress={()=> to(index)}>
       <View style={styles.card}>
         <View style={styles.box}>
           {/* // image here */}
           <Text>Image here</Text>
           <View style={styles.extras}>
             <CameraIcon color='#1e1e1e'/>
-            <Text style={{marginLeft: 5}}>1</Text>
+            <Text style={{marginLeft: 5}}>{data.images.length}</Text>
           </View>
         </View>
         <View style={styles.boxtext}>
-          <Text style={styles.desc} numberOfLines={3}>Description about the house in showcase</Text>
-          <Text style={styles.adress}>County, address</Text>
-          <Text style={styles.price}>10, 000/ksh</Text>
+          <Text style={styles.desc} numberOfLines={3}>{data.description}</Text>
+          <Text style={styles.adress}>{data.location}</Text>
+          <Text style={styles.price}>{data.price} ksh</Text>
         </View>
       </View>
     </Pressable>

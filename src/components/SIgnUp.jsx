@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 export default function SIgnUp({toggle}) {
+
+  const usersCol = firestore().collection('users')
 
   const [name, setName] = useState('')
   const [telephone, setTelephone] = useState('')
@@ -9,7 +13,42 @@ export default function SIgnUp({toggle}) {
   const [password, setPassword] = useState('')
 
   const signUp = ()=>{
-    // create new user, check user , to log in
+    // check error in inputs
+    var temp = ''
+    if (email === '' || password === null || name === '' || telephone === '') {
+      console.log('no empty fields allowed')
+      return
+    }
+    console.log('no empty fields found')
+    // create auth user, get uuid
+    auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((c) => {
+      console.log('User account created & signed in!')
+      temp = c.user.uid
+      console.log(`uid ${temp}`)
+      // create users collection id= uuid
+      usersCol.doc(temp).set({
+        name,
+        email,
+        telephone,
+      })
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!')
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!')
+      }
+
+      if (error.code === 'auth/weak-password'){
+        console.log('weak password')
+      }
+      console.error(error)
+      return
+    })
     toggle()
   }
 

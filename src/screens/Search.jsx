@@ -37,10 +37,10 @@ export default function Search({navigation}) {
                 <Text>results</Text>
             </View>
             <ScrollView style={{paddingHorizontal: 10}}>
+                {/* <HouseCard to={toDetails}/>
                 <HouseCard to={toDetails}/>
                 <HouseCard to={toDetails}/>
-                <HouseCard to={toDetails}/>
-                <HouseCard to={toDetails}/>
+                <HouseCard to={toDetails}/> */}
             </ScrollView>
             </ScrollView>
         </View>
