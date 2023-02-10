@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import {CameraIcon} from "react-native-heroicons/solid"
 
 export default function HouseCard({to, data, index}) {
@@ -6,8 +6,11 @@ export default function HouseCard({to, data, index}) {
     <Pressable onPress={()=> to(index)}>
       <View style={styles.card}>
         <View style={styles.box}>
-          {/* // image here */}
-          <Text>Image here</Text>
+          {
+            data.images.length < 1?
+            <Text>No images</Text> 
+            :<Image source={{uri : data.images[0]}} style={styles.img}/>
+          }
           <View style={styles.extras}>
             <CameraIcon color='#1e1e1e'/>
             <Text style={{marginLeft: 5}}>{data.images.length}</Text>
@@ -73,5 +76,9 @@ const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
+    },
+    img:{
+      width: '100%',
+      height: '100%'
     }
 })

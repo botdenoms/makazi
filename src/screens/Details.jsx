@@ -10,14 +10,14 @@ export default function Details({navigation, route}) {
             <View style={styles.appBar}>
                 <Pressable onPress={()=>navigation.goBack()}>
                     {/* <View style={styles.icon}></View> */}
-                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                    <ChevronLeftIcon size={28} color='red'/>
                 </Pressable>
                 <Pressable onPress={()=>navigation.navigate('Map')}>
                     {/* <View style={styles.icon}></View> */}
-                    <MapPinIcon size={28} color='#1e1e1e'/>
+                    <MapPinIcon size={28} color='green'/>
                 </Pressable>
             </View>
-            <ImagesCard/>
+            <ImagesCard images={route.params.images}/>
             <Text style={styles.price}>{route.params.price} ksh</Text>
             <View style={styles.more}>
                 <Text style={styles.dataextra}>{route.params.bedrooms} Bedrooms</Text>
@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     appBar:{
+        position: 'absolute',
+        zIndex: 2,
         height: 50,
         // backgroundColor: 'red',
         width: '100%',

@@ -1,15 +1,37 @@
-import { View, Text, StyleSheet, Pressable} from 'react-native'
+import { useState } from 'react'
+import { View, Text, StyleSheet, Pressable, Image} from 'react-native'
 import {ChevronLeftIcon, ChevronRightIcon} from "react-native-heroicons/solid"
 
-export default function ImagesCard() {
+export default function ImagesCard({images}) {
+
+  const [index, setIndex] = useState(0)
+
+  const upIndex = ()=>{
+    if (index >= images.length - 1) {
+      return
+    }
+    setIndex(index + 1)
+  }
+
+  const downIndex = ()=>{
+    if (index <= 0) {
+      return
+    }
+    setIndex(index - 1)
+  }
+
   return (
     <View style={styles.card}>
-      <Text>Image here</Text>
+      {
+        images.length < 1?
+        <Text>No images</Text> 
+        :<Image source={{uri : images[index]}} style={{height: '100%', width: '100%'}}/>
+      }
       <View style={styles.extras}>
-        <Pressable>
+        <Pressable onPress={()=> downIndex()}>
           <ChevronLeftIcon color='white'/>
         </Pressable>
-        <Pressable>
+        <Pressable onPress={()=> upIndex()}>
          <ChevronRightIcon color='white'/>
         </Pressable>
       </View>
@@ -19,7 +41,7 @@ export default function ImagesCard() {
 
 const styles = StyleSheet.create({
   card:{
-    height: 200,
+    height: 250,
     width: '100%',
     backgroundColor: '#1e1e1e',
     display: 'flex',
