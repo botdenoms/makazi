@@ -1,6 +1,9 @@
-import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable } from 'react-native'
+import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable, Image } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 import auth from '@react-native-firebase/auth'
+
+import {launchImageLibrary} from 'react-native-image-picker'
 
 import CustomInput from '../components/CustomInput'
 
@@ -10,6 +13,7 @@ import { useState } from 'react'
 export default function Listing({navigation}) {
 
   const ref = firestore().collection('listings')
+  const parent = storage().ref('/images/')
 
   const [descrip, setDescrip] = useState('')
   const [county, setCounty] = useState('')
@@ -17,7 +21,7 @@ export default function Listing({navigation}) {
   const [bed, setBed] = useState(1)
   const [bath, setBath] = useState(1)
   const [rent, setRent] = useState(1)
-  const [images, setImages] = useState([1, 2, 3])
+  const [images, setImages] = useState([])
   const [avail, setAvail] = useState(true)
   const [rental, setRental] = useState(true)
   const [geo, setGeo] = useState([])
@@ -66,6 +70,42 @@ export default function Listing({navigation}) {
     }
   }
 
+  const pickPhoto = async()=>{
+    await launchImageLibrary({mediaType: 'photo'}, async (result)=>{
+      if (result.didCancel) { 
+        console.log('Cancelled')
+      } else if (result.error) { 
+        console.log('Error', result.errorMessage)
+      } else { 
+        // console.log(result)
+        // console.log(`file path: ${result.assets[0].uri}`)
+        const ref = parent.child(result.assets[0].fileName)
+        ref.putFile(result.assets[0].uri).then(async (e)=>{
+          const url = await ref.getDownloadURL()
+          setImages([...images, url])
+          // console.log(`url path: ${url}`)
+        })
+        // const url = await ref.getDownloadURL()
+      // if (result.didCancel) {
+      //   console.log('picking cancelled')
+      //   return
+      // }
+      // if (result.assets.length < 1) {
+      //   console.log('no image picked')
+      //   return
+      // }else{
+      //   console.log(`file path: ${result.assets[0].uri}`)
+      //   const ref = parent.child(result.assets[0].fileName)
+      //   ref.putFile(result.assets[0].uri).then((a)=>{
+      //     console.log(`after upload: ${a}`)
+      //   })
+      //   const url = await ref.getDownloadURL()
+      //   console.log(`url in out block: ${url}`)
+      //   // add url/uri to images list
+      }
+    })
+  }
+
   return (
     <SafeAreaView>
         <View style={styles.body}>
@@ -108,6 +148,7 @@ export default function Listing({navigation}) {
                     images.map((u)=> {
                       return (
                         <View style={{width: 150, height: '100%', backgroundColor: 'red', marginHorizontal: 2}} key={u}>
+                          <Image source={{uri: u}} style={{width: '100%', height: '100%'}}/>
                         </View>
                       )
                     })
@@ -116,7 +157,7 @@ export default function Listing({navigation}) {
                 }
               </View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
-                <Pressable>
+                <Pressable onPress={()=> pickPhoto()}>
                   <View style={styles.button}>
                     <Text>Upload image</Text>
                   </View>
