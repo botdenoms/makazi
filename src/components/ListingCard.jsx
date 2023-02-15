@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
-import {CameraIcon} from "react-native-heroicons/solid"
+import {CameraIcon, CheckBadgeIcon} from "react-native-heroicons/solid"
 
 export default function ListingCard({data}) {
   return (
@@ -15,10 +15,16 @@ export default function ListingCard({data}) {
               <CameraIcon color='#1e1e1e'/>
               <Text style={{marginLeft: 5}}>{data.images.length}</Text>
             </View>
+            <View style={styles.verif}>
+              <CheckBadgeIcon color={data.verified == 1?'green':'red'}/>
+              <Text 
+                style={[{marginLeft: 5, fontSize: 11}, {color: data.verified == 1?'green':'red'}]}
+                >{data.verified == 1?'Verified':'Not verified'}</Text>
+            </View>
         </View>
         <View style={styles.boxtext}>
           <Text style={styles.desc} numberOfLines={3}>{data.description}</Text>
-          <Text style={styles.adress}>{data.location}</Text>
+          <Text style={styles.adress}>{data.location[0]}, {data.location[1]}</Text>
           <Text style={styles.price}>{data.price}/ksh</Text>
         </View>
       </View>
@@ -90,6 +96,17 @@ const styles = StyleSheet.create({
   price:{
     fontSize: 17,
     color: 'green'
+  },
+  verif:{
+    position: 'absolute',
+    height: 24,
+    // width: 40,
+    // backgroundColor: 'red',
+    top: 5,
+    left: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   extras:{
     position: 'absolute',

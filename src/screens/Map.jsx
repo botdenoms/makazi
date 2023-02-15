@@ -2,7 +2,8 @@ import { View, SafeAreaView, StyleSheet, Pressable } from 'react-native'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
 
-export default function Map({navigation}) {
+export default function Map({navigation, route}) {
+  console.log(`pass goe location: ${route.params}`)
   return (
     <SafeAreaView>
         <View style={styles.body}>

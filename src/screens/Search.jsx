@@ -1,51 +1,140 @@
 import { View, StyleSheet, SafeAreaView, ScrollView, TextInput, Pressable , Text} from 'react-native'
 import CustomInput from '../components/CustomInput'
 // import ResultCard from '../components/ResultCard'
+import firestore from '@react-native-firebase/firestore'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
 import HouseCard from '../components/HouseCard'
+import { useState } from 'react'
 
 export default function Search({navigation}) {
+    
+    const ref = firestore().collection('listings')
 
-    const toDetails = ()=>{
-        navigation.navigate('Details')
+    const [searching, setSearching] = useState(false)
+    const [rent, setRent] = useState('')
+    const [county, setCounty] = useState('')
+    const [bed, setBed] = useState('')
+    const [results, setResults] = useState([])
+
+    const toDetails = (index)=>{
+        navigation.navigate('Details', { ...results[index]})
     }
 
-  return (
-    <SafeAreaView>
-        <View style={styles.body}>
-            <View style={styles.appBar}>
-                <Pressable onPress={()=>navigation.goBack()}>
-                    {/* <View style={styles.icon}></View> */}
-                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
-                </Pressable>
-            </View>
-            <ScrollView>
-            <TextInput style={styles.input} placeholder='Rent Amount'/>
-            <TextInput style={styles.input} placeholder='County, Address'/>
-            <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 20}}>
-                <CustomInput title='Bedrooms' type={0}/>
-            </View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Pressable>
-                    <View style={styles.button}>
-                        <Text>Search</Text>
+    const doSearch= async ()=>{
+        // check fields
+        if (rent === '' && county === '') {
+            console.log(`atleast one is to be picked option`)
+        }
+        // only rent searched
+        if (rent !== '' && county === '') {
+            console.log(`searching price only`)
+            setSearching(true)
+            const req = await ref.where('price', '<=', Number(rent)).get()
+            const lst = req.docs
+            const temp = []
+            for (let index = 0; index < lst.length; index++) {
+                const element = {
+                    id : lst[index].id,
+                    ...lst[index].data()
+                }
+                temp.push(element)
+            }
+            setResults([...temp])
+            setSearching(false)
+        }
+        
+        if (rent === '' && county !== '') {
+            console.log(`searching county only`)
+            setSearching(true)
+            const req = await ref.where('location', 'array-contains', county).get()
+            const lst = req.docs
+            const temp = []
+            for (let index = 0; index < lst.length; index++) {
+                const element = {
+                    id : lst[index].id,
+                    ...lst[index].data()
+                }
+                temp.push(element)
+            }
+            setResults([...temp])
+            setSearching(false)
+        }
+
+        if (rent !== '' && county !== '') {
+            console.log(`searching rent and county both`)
+            setSearching(true)
+            // location first before price check
+            const req = await ref.where('location', 'array-contains', county).get()
+            // where('price', '<=', Number(rent)).get()
+            const lst = req.docs
+            var temp = []
+            for (let index = 0; index < lst.length; index++) {
+                const element = {
+                    id : lst[index].id,
+                    ...lst[index].data()
+                }
+                temp.push(element)
+            }
+            temp = temp.filter((i)=> i.price <= Number(rent))
+            setResults([...temp])
+            setSearching(false)
+        }
+
+    }
+
+    return (
+        <SafeAreaView>
+            <View style={styles.body}>
+                <View style={styles.appBar}>
+                    <Pressable onPress={()=>navigation.goBack()}>
+                        {/* <View style={styles.icon}></View> */}
+                        <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                    </Pressable>
+                </View>
+                <ScrollView>
+                <TextInput 
+                    style={styles.input} 
+                    placeholder='Rent Amount'
+                    onChangeText={(t)=> setRent(t)}
+                />
+                <TextInput 
+                    style={styles.input} 
+                    placeholder='County, Address'
+                    onChangeText={(t)=> setCounty(t)}
+                />
+                <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 20}}>
+                    <CustomInput title='Bedrooms' type={0} handleChange={setBed}/>
+                </View>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Pressable onPress={()=> doSearch()}>
+                        <View style={styles.button}>
+                            <Text>Search</Text>
+                        </View>
+                    </Pressable>
+                </View>
+                <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 20}}>
+                    <Text>results</Text>
+                </View>
+                {
+                    searching? 
+                    <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
+                        <Text>Searching...</Text>
                     </View>
-                </Pressable>
+                    :results.length < 1?
+                    <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
+                        <Text>No results found</Text>
+                    </View>
+                    :<ScrollView style={{paddingHorizontal: 10}}>
+                    {
+                        results.map((r, i)=> <HouseCard key={i} data={r} to={toDetails} index={i}/>)
+                    }
+                </ScrollView>
+                }
+                </ScrollView>
             </View>
-            <View style={{justifyContent: 'center', alignItems: 'flex-start', paddingHorizontal: 20}}>
-                <Text>results</Text>
-            </View>
-            <ScrollView style={{paddingHorizontal: 10}}>
-                {/* <HouseCard to={toDetails}/>
-                <HouseCard to={toDetails}/>
-                <HouseCard to={toDetails}/>
-                <HouseCard to={toDetails}/> */}
-            </ScrollView>
-            </ScrollView>
-        </View>
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({

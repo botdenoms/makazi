@@ -12,7 +12,7 @@ export default function Details({navigation, route}) {
                     {/* <View style={styles.icon}></View> */}
                     <ChevronLeftIcon size={28} color='red'/>
                 </Pressable>
-                <Pressable onPress={()=>navigation.navigate('Map')}>
+                <Pressable onPress={()=>navigation.navigate('Map', {long: route.params.geoloc[0], lat: route.params.geoloc[1]})}>
                     {/* <View style={styles.icon}></View> */}
                     <MapPinIcon size={28} color='green'/>
                 </Pressable>

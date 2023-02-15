@@ -52,15 +52,16 @@ export default function Listing({navigation}) {
         const _documentRef = await ref.doc().set({
           owner: auth().currentUser.uid,
           description: descrip,
-          location: `${county}, ${adress}`,
-          price: rent,
-          bathrooms: bath,
-          bedrooms: bed,
+          location: [county, adress],
+          price: Number(rent),
+          bathrooms: Number(bath),
+          bedrooms: Number(bed),
           images,
           rental,
           availability: avail,
           uploaded: Date.now(),
-          geoloc: geo
+          geoloc: geo,
+          verified: false
         })
         clearInputs()
         // console.log(`doc id: ${documentRef}`)

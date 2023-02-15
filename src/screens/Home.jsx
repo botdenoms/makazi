@@ -11,6 +11,7 @@ export default function Home({ navigation }) {
 
     const [houses, setHouses] = useState([])
     const [user, setUser] = useState(null)
+    const [load, setLoad] = useState(true)
     // const [idx, setIdx] = useState(0)
 
     const ref = firestore().collection('listings')
@@ -44,7 +45,9 @@ export default function Home({ navigation }) {
 
     const loadHouses = async ()=>{
         // request data
-        const lst = await (await ref.get()).docs
+        // const lst = await (await ref.get()).docs
+        const req = await ref.where('verified', '==', true).get()
+        const lst = req.docs
         const temp = []
         for (let index = 0; index < lst.length; index++) {
             const element = {
@@ -54,6 +57,7 @@ export default function Home({ navigation }) {
             temp.push(element)
         }
         setHouses([...temp])
+        setLoad(false)
         
     }
 
@@ -72,13 +76,17 @@ export default function Home({ navigation }) {
                 >
                     <Text>Featured</Text>
                     {
-                        houses.map((h, i)=> <HouseCard to={toDetails} key={h.id} data={h} index={i}/>)
+                        load?
+                        <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text>Loading...</Text>
+                        </View>
+                        : houses.length < 1?
+                        <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text>Unavailable currently</Text>
+                        </View>
+                        :houses.map((h, i)=> <HouseCard to={toDetails} key={h.id} data={h} index={i}/>)
                     }
-                    {/* <HouseCard to={toDetails}/>
-                    <HouseCard to={toDetails}/>
-                    <HouseCard to={toDetails}/>
-                    <HouseCard to={toDetails}/>
-                    <HouseCard to={toDetails}/> */}
+
                 </ScrollView>
                 <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
                     <Pressable onPress={()=> navigation.navigate('Search')}>
@@ -91,7 +99,6 @@ export default function Home({ navigation }) {
         </SafeAreaView>
     )
 }
-
 
 const styles = StyleSheet.create({
     body:{

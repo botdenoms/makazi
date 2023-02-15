@@ -12,6 +12,8 @@ export default function Profile({navigation}) {
     const ref = firestore().collection('users')
     const refList = firestore().collection('listings')
     const [current, setCurrent] = useState({})
+    const [profile, setProfile] = useState(true)
+    const [fetching, setFetching] = useState(true)
 
     useEffect(()=>{
         getUser()
@@ -35,6 +37,7 @@ export default function Profile({navigation}) {
                 temp.push(element)
             }
             setlistings([...temp])
+            setFetching(false)
         } else {
             console.log('no current listings')
         }
@@ -44,6 +47,7 @@ export default function Profile({navigation}) {
         if(auth().currentUser.uid !== null){
             const doc = await ref.doc(auth().currentUser.uid).get()
             setCurrent(doc.data())
+            setProfile(false)
         } else {
             console.log('no user currently')
         }
@@ -65,6 +69,7 @@ export default function Profile({navigation}) {
     const updatelisting = ()=>{
         // update the value of listing
     }
+
     return (
         <SafeAreaView>
             <View style={StyleSheet.body}>
@@ -78,17 +83,30 @@ export default function Profile({navigation}) {
                 </View>
                 <View style={{height: '92%',width: '100%'}}>
                     <ScrollView style={{width: '100%', height: '100%'}}>
-                    <Text style={styles.textbox}>{current.name}</Text>
-                        <Text style={styles.textbox}>{current.telephone}</Text>
-                        <Text style={styles.textbox}>{current.email}</Text>
-                        <Text style={styles.textbox}>My listings</Text>
+                        {
+                            profile?
+                            <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text>Loading...</Text>
+                            </View>
+                            :<>
+                                <Text style={styles.textbox}>{current.name}</Text>
+                                <Text style={styles.textbox}>{current.telephone}</Text>
+                                <Text style={styles.textbox}>{current.email}</Text>
+                                <Text style={styles.textbox}>My listings</Text>
+                            </>
+                        }  
                         <ScrollView style={{ paddingHorizontal: 10}}>
-                            {listings.map((l)=> <ListingCard key={l.id} data={l}/>)}
-                            {/* <ListingCard/>
-                            <ListingCard/>
-                            <ListingCard/>
-                            <ListingCard/>
-                            <ListingCard/> */}
+                            {
+                                fetching?
+                                <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text>Loading...</Text>
+                                </View>
+                                : listings.length < 1?
+                                <View style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text>No listing posted</Text>
+                                </View>
+                                :listings.map((l)=> <ListingCard key={l.id} data={l}/>)
+                            }
                         </ScrollView> 
                     </ScrollView>
                 </View>
@@ -103,10 +121,6 @@ export default function Profile({navigation}) {
         </SafeAreaView>
     )
 }
-
-
-
-
 
 const styles = StyleSheet.create({
     body:{

@@ -18,7 +18,7 @@ export default function HouseCard({to, data, index}) {
         </View>
         <View style={styles.boxtext}>
           <Text style={styles.desc} numberOfLines={3}>{data.description}</Text>
-          <Text style={styles.adress}>{data.location}</Text>
+          <Text style={styles.adress}>{data.location[0]}, {data.location[1]}</Text>
           <Text style={styles.price}>{data.price} ksh</Text>
         </View>
       </View>
