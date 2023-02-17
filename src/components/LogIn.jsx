@@ -1,4 +1,4 @@
-import { View, Text, TextInput,Pressable, StyleSheet} from 'react-native'
+import { View, Text, TextInput,Pressable, StyleSheet, ActivityIndicator} from 'react-native'
 import {useState} from 'react'
 
 import auth from '@react-native-firebase/auth'
@@ -9,6 +9,7 @@ export default function LogIn({toggle, stack}) {
   // const [telephone, setTelephone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [logging, setLogging] = useState(false)
 
   const logIn = ()=>{
     if (email === '' || password === '') {
@@ -16,9 +17,11 @@ export default function LogIn({toggle, stack}) {
       return
     }
     console.log('no empty stuff')
+    setLogging(true)
     // log in checks & create user obj
     auth().signInWithEmailAndPassword(email, password).then((e)=>{
       console.log(`signed in as ${e.user.email}`)
+      setLogging(true)
       stack.navigate('profile')
     }).catch((e)=>{
       console.log(`this error: ${e}`)
@@ -30,19 +33,6 @@ export default function LogIn({toggle, stack}) {
       <View style={styles.header}>
         <Text style={{fontSize: 18}}>Welcome Back</Text>
       </View>
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Name"
-        onChangeText={(t)=> setName(t)}
-        value={name}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="07....."
-        keyboardType="phone-pad"
-        onChangeText={(t)=> setTelephone(t)}
-        value={telephone}
-      /> */}
       <TextInput
         style={styles.input}
         placeholder="email@name.com"
@@ -60,7 +50,10 @@ export default function LogIn({toggle, stack}) {
       <View style={styles.center}>
         <Pressable onPress={()=>logIn()}>
           <View style={styles.button}>
-            <Text>Log in</Text>
+            {
+              logging? <ActivityIndicator color='white' size='small'/>
+              :<Text style={{color: 'white'}}>Log in</Text>
+            }
           </View>
       </Pressable>
       </View>
@@ -103,7 +96,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 40,
     paddingVertical: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1e1e1e',
     marginHorizontal: 20,
     justifyContent: "center",
     alignItems:"center"

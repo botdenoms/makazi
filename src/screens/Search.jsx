@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, ScrollView, TextInput, Pressable , Text} from 'react-native'
+import { View, StyleSheet, SafeAreaView, ScrollView, TextInput, Pressable , Text, ActivityIndicator} from 'react-native'
 import CustomInput from '../components/CustomInput'
 // import ResultCard from '../components/ResultCard'
 import firestore from '@react-native-firebase/firestore'
@@ -32,7 +32,7 @@ export default function Search({navigation}) {
             setSearching(true)
             const req = await ref.where('price', '<=', Number(rent)).get()
             const lst = req.docs
-            const temp = []
+            var temp = []
             for (let index = 0; index < lst.length; index++) {
                 const element = {
                     id : lst[index].id,
@@ -40,6 +40,7 @@ export default function Search({navigation}) {
                 }
                 temp.push(element)
             }
+            temp = temp.filter((i)=> i.verified === true)
             setResults([...temp])
             setSearching(false)
         }
@@ -49,7 +50,7 @@ export default function Search({navigation}) {
             setSearching(true)
             const req = await ref.where('location', 'array-contains', county).get()
             const lst = req.docs
-            const temp = []
+            var temp = []
             for (let index = 0; index < lst.length; index++) {
                 const element = {
                     id : lst[index].id,
@@ -57,6 +58,7 @@ export default function Search({navigation}) {
                 }
                 temp.push(element)
             }
+            temp = temp.filter((i)=> i.verified === true)
             setResults([...temp])
             setSearching(false)
         }
@@ -77,6 +79,7 @@ export default function Search({navigation}) {
                 temp.push(element)
             }
             temp = temp.filter((i)=> i.price <= Number(rent))
+            temp = temp.filter((i)=> i.verified === true)
             setResults([...temp])
             setSearching(false)
         }
@@ -119,11 +122,12 @@ export default function Search({navigation}) {
                 {
                     searching? 
                     <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text>Searching...</Text>
+                        <ActivityIndicator color='#1e1e1e'/>
                     </View>
                     :results.length < 1?
                     <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text>No results found</Text>
+                        <Text>No results found or</Text>
+                        <Text>You have not make any search</Text>
                     </View>
                     :<ScrollView style={{paddingHorizontal: 10}}>
                     {

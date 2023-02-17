@@ -86,23 +86,6 @@ export default function Listing({navigation}) {
           setImages([...images, url])
           // console.log(`url path: ${url}`)
         })
-        // const url = await ref.getDownloadURL()
-      // if (result.didCancel) {
-      //   console.log('picking cancelled')
-      //   return
-      // }
-      // if (result.assets.length < 1) {
-      //   console.log('no image picked')
-      //   return
-      // }else{
-      //   console.log(`file path: ${result.assets[0].uri}`)
-      //   const ref = parent.child(result.assets[0].fileName)
-      //   ref.putFile(result.assets[0].uri).then((a)=>{
-      //     console.log(`after upload: ${a}`)
-      //   })
-      //   const url = await ref.getDownloadURL()
-      //   console.log(`url in out block: ${url}`)
-      //   // add url/uri to images list
       }
     })
   }

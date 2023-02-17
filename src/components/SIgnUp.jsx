@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Pressable, ActivityIndicator } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
-export default function SIgnUp({toggle}) {
+export default function SIgnUp({toggle, stack}) {
 
   const usersCol = firestore().collection('users')
 
@@ -11,6 +11,7 @@ export default function SIgnUp({toggle}) {
   const [telephone, setTelephone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [signing, setSigning] = useState(false)
 
   const signUp = ()=>{
     // check error in inputs
@@ -20,6 +21,7 @@ export default function SIgnUp({toggle}) {
       return
     }
     console.log('no empty fields found')
+    setSigning(true)
     // create auth user, get uuid
     auth()
     .createUserWithEmailAndPassword(email, password)
@@ -33,6 +35,8 @@ export default function SIgnUp({toggle}) {
         email,
         telephone,
       })
+      setSigning(false)
+      stack.navigate('profile')
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -87,7 +91,11 @@ export default function SIgnUp({toggle}) {
       <View style={styles.center}>
         <Pressable onPress={()=> signUp()}>
           <View style={styles.button}>
-            <Text>SignUp</Text>
+            {
+              signing?
+              <ActivityIndicator color='white' size='small'/>
+              :<Text style={{color: 'white'}}>SignUp</Text>
+            }
           </View>
       </Pressable>
       </View>
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 40,
     paddingVertical: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1e1e1e',
     marginHorizontal: 20,
     justifyContent: "center",
     alignItems:"center"

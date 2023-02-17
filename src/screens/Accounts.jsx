@@ -18,21 +18,23 @@ export default function Accounts({navigation}) {
             navigation.navigate('Home')
         }
     }
-  return (
-    <SafeAreaView>
-        <View style={styles.body}>
-            <View style={styles.appBar}>
-                <Pressable onPress={()=> exit()}>
-                    {/* <View style={styles.icon}></View> */}
-                    <ChevronLeftIcon size={28} color='#1e1e1e'/>
-                </Pressable>
+    return (
+        <SafeAreaView>
+            <View style={styles.body}>
+                <View style={styles.appBar}>
+                    <Pressable onPress={()=> exit()}>
+                        {/* <View style={styles.icon}></View> */}
+                        <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                    </Pressable>
+                </View>
+                {
+                    user == true?
+                    <LogIn toggle={toggle} stack={navigation}/>
+                    :<SIgnUp toggle={toggle} stack={navigation}/>
+                }
             </View>
-            {
-                user == true?<LogIn toggle={toggle} stack={navigation}/>:<SIgnUp toggle={toggle}/>
-            }
-        </View>
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({

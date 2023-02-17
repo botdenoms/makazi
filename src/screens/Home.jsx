@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
@@ -47,7 +47,7 @@ export default function Home({ navigation }) {
         // request data
         // const lst = await (await ref.get()).docs
         const req = await ref.where('verified', '==', true).get()
-        const lst = req.docs
+        const lst = await req.docs
         const temp = []
         for (let index = 0; index < lst.length; index++) {
             const element = {
@@ -78,7 +78,8 @@ export default function Home({ navigation }) {
                     {
                         load?
                         <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text>Loading...</Text>
+                            {/* <Text>Loading...</Text> */}
+                            <ActivityIndicator color='#1e1e1e' animating={true}/>
                         </View>
                         : houses.length < 1?
                         <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>

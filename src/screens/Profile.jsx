@@ -55,12 +55,12 @@ export default function Profile({navigation}) {
 
     const logOut = ()=>{
         auth().signOut().then(() => console.log('User signed out!'))
-        navigation.navigate('Accounts')
+        navigation.replace('Accounts')
     }
 
     const exit = ()=>{
         if (auth().currentUser.uid !== null) {
-            navigation.navigate('Home')
+            navigation.replace('Home')
         }else{
             navigation.navigate('Accounts')
         }
@@ -102,7 +102,7 @@ export default function Profile({navigation}) {
                                     <Text>Loading...</Text>
                                 </View>
                                 : listings.length < 1?
-                                <View style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                                <View style={{width: '100%', height: 500, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text>No listing posted</Text>
                                 </View>
                                 :listings.map((l)=> <ListingCard key={l.id} data={l}/>)
