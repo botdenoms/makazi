@@ -8,7 +8,7 @@ export default function CustomInput({title, type, handleChange}) {
       <TextInput 
         style={styles.input} 
         placeholder={type == 0? '1': '1, 000 ks'} 
-        onChangeText={(e)=> handleChange(e)}
+        onChangeText={(e)=> handleChange(Number(e))}
         />
     </View>
   )

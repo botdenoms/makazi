@@ -21,7 +21,7 @@ export default function LogIn({toggle, stack}) {
     // log in checks & create user obj
     auth().signInWithEmailAndPassword(email, password).then((e)=>{
       console.log(`signed in as ${e.user.email}`)
-      setLogging(true)
+      setLogging(false)
       stack.navigate('profile')
     }).catch((e)=>{
       console.log(`this error: ${e}`)

@@ -65,7 +65,9 @@ export default function Home({ navigation }) {
         <SafeAreaView>
             <View style={styles.body}>
                 <View style={styles.appBar}>
-                    <Text>Makazi</Text>
+                    <Pressable onLongPress={()=> navigation.replace('Admin')}>
+                        <Text style={{color: '#1e1e1e', fontWeight: '600'}}>Makazi</Text>
+                    </Pressable>
                     <Pressable onPress={()=> toAccounts()}>
                         <UserCircleIcon size={36} color='#1e1e1e'/>
                     </Pressable>

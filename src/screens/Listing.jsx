@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable, Image } from 'react-native'
+import { View, SafeAreaView, StyleSheet, ScrollView, Text, TextInput, Pressable, Image, ActivityIndicator } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 import auth from '@react-native-firebase/auth'
@@ -25,6 +25,7 @@ export default function Listing({navigation}) {
   const [avail, setAvail] = useState(true)
   const [rental, setRental] = useState(true)
   const [geo, setGeo] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const toggleAvail = ()=>{
     setAvail(!avail)
@@ -132,7 +133,12 @@ export default function Listing({navigation}) {
                     images.map((u)=> {
                       return (
                         <View style={{width: 150, height: '100%', backgroundColor: 'red', marginHorizontal: 2}} key={u}>
-                          <Image source={{uri: u}} style={{width: '100%', height: '100%'}}/>
+                          <Image 
+                            source={{uri: u}} 
+                            style={{width: '100%', height: '100%'}} 
+                            onLoadStart={()=>setLoading(true)}
+                            onLoadEnd={()=> setLoading(false)}/>
+                          loading? <ActivityIndicator color='#1e1e1e'/>: <></>
                         </View>
                       )
                     })
@@ -182,7 +188,7 @@ export default function Listing({navigation}) {
                   <TextInput 
                   style={styles.input} 
                   placeholder='-180 to 180' 
-                  onChangeText={(t)=> setGeo([t, geo[1]])}
+                  onChangeText={(t)=> setGeo([Number(t), geo[1]])}
                   />
                 </View>
                 <View>
@@ -190,7 +196,7 @@ export default function Listing({navigation}) {
                   <TextInput 
                   style={styles.input} 
                   placeholder='-180 to 180' 
-                  onChangeText={(t)=> setGeo([geo[0], t])}
+                  onChangeText={(t)=> setGeo([geo[0], Number(t)])}
                   />
                 </View>
               </View>

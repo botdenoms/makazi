@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import Accounts from "./src/screens/Accounts"
+import Admin from './src/screens/admin/Admin'
 import Details from "./src/screens/Details"
 import Home from "./src/screens/Home"
 import Listing from './src/screens/Listing'
@@ -24,6 +25,7 @@ function App(){
           <Stack.Screen name="Search" component={Search} options={{ headerShown: false }}/>
           <Stack.Screen name="Map" component={Map} options={{ headerShown: false }}/>
           <Stack.Screen name="Listing" component={Listing} options={{ headerShown: false }}/>
+          <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }}/>
         </Stack.Navigator>
     </NavigationContainer>
   );
