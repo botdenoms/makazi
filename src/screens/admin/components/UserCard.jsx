@@ -10,7 +10,7 @@ export default function UserCard({data}) {
         <Text style={styles.text2}>{data.email}</Text>
         <Pressable>
           <View style={styles.button}>
-            <Text style={{color: 'white'}}>Delete</Text>
+            <Text style={{color: 'white'}}>Disable</Text>
           </View>
         </Pressable>
     </View>
@@ -19,7 +19,7 @@ export default function UserCard({data}) {
 
 const styles = StyleSheet.create({
     body:{
-        backgroundColor: 'grey',
+        // backgroundColor: 'grey',
         paddingHorizontal: 5,
         marginVertical: 2,
         alignItems: 'flex-start'
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         paddingVertical: 10,
         backgroundColor: '#1e1e1e',
-        marginHorizontal: 20,
+        // marginHorizontal: 20,
         justifyContent: "center",
         alignItems:"center"
     }

@@ -13,12 +13,12 @@ export default function ListingCard({data}) {
     return (
         <View style={styles.body}>
             <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
-                <Text>{data.rental === true? 'Rental':'Sale'}</Text>
-                <Text>{data.price} ksh</Text>
+                <Text style={styles.adress}>{data.rental === true? 'Rental':'Sale'}</Text>
+                <Text style={styles.price}>{data.price} ksh</Text>
             </View>
             <ImagesCard images={data.images}/>
-            <Pressable onPress={()=> setMore(!more)}>
-                <Text>
+            <Pressable onPress={()=> setMore(!more)} style={{paddingVertical: 5}}>
+                <Text style={styles.more}>
                     {
                         more?"Less": "More"
                     }
@@ -27,11 +27,11 @@ export default function ListingCard({data}) {
             {
                 more?
                 <>
-                    <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
-                        <Text>{data.location[0]}, {data.location[1]}</Text>
-                        <Text>{data.geoloc}</Text>
+                    <View style={{flexDirection: 'row', marginVertical: 5, justifyContent: 'space-between'}}>
+                        <Text style={styles.desc}>{data.location[0]}, {data.location[1]}</Text>
+                        <Text>lat: {data.geoloc[0]}, long: {data.geoloc[1]}</Text>
                     </View>
-                    <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
+                    <View style={{flexDirection: 'row', marginVertical: 5, justifyContent: 'space-between'}}>
                         <Text>bedrooms: {data.bedrooms}</Text>
                         <Text>bathrooms: {data.bathrooms}</Text>
                     </View>
@@ -40,15 +40,20 @@ export default function ListingCard({data}) {
             }
             <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
                 <Pressable>
-                    <View style={styles.button}>
-                        <Text>Delete</Text>
+                    <View style={[styles.button, {backgroundColor: 'red'}]}>
+                        <Text style={{color: 'white'}}>Delete</Text>
                     </View>
                 </Pressable>
-                <Pressable>
-                    <View style={styles.button}>
-                        <Text>Approve</Text>
-                    </View>
-                </Pressable>
+                {
+                    data.verified === true?
+                    <Pressable>
+                        <View style={[styles.button, {backgroundColor: '#1e1e1e'}]}>
+                            <Text style={{color: 'white'}}>Approve</Text>
+                        </View>
+                    </Pressable>
+                    :<></>
+                }
+                
             </View>
         </View>
     )
@@ -67,13 +72,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: 'grey',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
     justifyContent: "center",
     alignItems:"center"
   },
   desc:{
-    width: '100%',
-    flex: 1,
+    // width: '100%',
+    // flex: 1,
     flexDirection: 'column',
     fontSize: 14
   },
@@ -84,5 +89,9 @@ const styles = StyleSheet.create({
   price:{
     fontSize: 17,
     color: 'green'
+  },
+  more:{
+    fontSize: 17,
+    color: '#1e1e1e'
   },
 })

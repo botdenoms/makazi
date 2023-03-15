@@ -2,36 +2,53 @@ import { View, SafeAreaView, StyleSheet, Text, Pressable } from 'react-native'
 import ImagesCard from '../components/ImagesCard'
 
 import { ChevronLeftIcon, MapPinIcon } from "react-native-heroicons/solid"
+import { useState } from 'react'
 
 export default function Details({navigation, route}) {
-  return (
-    <SafeAreaView>
-        <View style={styles.body}>
-            <View style={styles.appBar}>
-                <Pressable onPress={()=>navigation.goBack()}>
-                    {/* <View style={styles.icon}></View> */}
-                    <ChevronLeftIcon size={28} color='red'/>
+
+    const [more, setMore] = useState(false)
+
+    const viewMore = ()=>{
+        // fetch & show owner details
+        setMore(true)
+    }
+
+    return (
+        <SafeAreaView>
+            <View style={styles.body}>
+                <View style={styles.appBar}>
+                    <Pressable onPress={()=>navigation.goBack()}>
+                        {/* <View style={styles.icon}></View> */}
+                        <ChevronLeftIcon size={28} color='red'/>
+                    </Pressable>
+                    <Pressable onPress={()=>navigation.navigate('Map', {long: route.params.geoloc[0], lat: route.params.geoloc[1]})}>
+                        {/* <View style={styles.icon}></View> */}
+                        <MapPinIcon size={28} color='green'/>
+                    </Pressable>
+                </View>
+                <ImagesCard images={route.params.images}/>
+                <Text style={styles.price}>{route.params.price} ksh</Text>
+                <View style={styles.more}>
+                    <Text style={styles.dataextra}>{route.params.bedrooms} Bedrooms</Text>
+                    <Text style={styles.dataextra}>{route.params.bathrooms} Bathrooms</Text>
+                </View>
+                <Text style={styles.address}>{route.params.location[0]}, {route.params.location[1]}</Text>
+                <Text style={styles.header}>Availability status</Text>
+                <Text style={styles.data}>{route.params.availability == 1?'Available':'Unavailable'}</Text>
+                <Pressable onPress={()=> viewMore()}>
+                    <Text style={[styles.header, {fontSize: 18, color:'#1e1e1e'}]}>Owner Contacts</Text>
                 </Pressable>
-                <Pressable onPress={()=>navigation.navigate('Map', {long: route.params.geoloc[0], lat: route.params.geoloc[1]})}>
-                    {/* <View style={styles.icon}></View> */}
-                    <MapPinIcon size={28} color='green'/>
-                </Pressable>
+                {
+                    more?
+                    <>
+                        <Text style={styles.data}>Owner.email.com</Text>
+                        <Text style={styles.data}>Telphone no</Text> 
+                    </>
+                    :<></>
+                }
             </View>
-            <ImagesCard images={route.params.images}/>
-            <Text style={styles.price}>{route.params.price} ksh</Text>
-            <View style={styles.more}>
-                <Text style={styles.dataextra}>{route.params.bedrooms} Bedrooms</Text>
-                <Text style={styles.dataextra}>{route.params.bathrooms} Bathrooms</Text>
-            </View>
-            <Text style={styles.address}>{route.params.location}</Text>
-            <Text style={styles.header}>Availability status</Text>
-            <Text style={styles.data}>{route.params.availability == 1?'Available':'Unavailable'}</Text>
-            <Text style={styles.header}>Owner/renter</Text>
-            <Text style={styles.data}>Owner.email.com</Text>
-            <Text style={styles.data}>Telphone no</Text>
-        </View>
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
