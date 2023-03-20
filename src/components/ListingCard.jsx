@@ -31,12 +31,12 @@ export default function ListingCard({data}) {
       <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
         <Pressable>
           <View style={styles.button}>
-            <Text>Remove</Text>
+            <Text style={{color: 'red'}}>Remove</Text>
           </View>
         </Pressable>
         <Pressable>
           <View style={styles.button}>
-            <Text>Available</Text>
+            <Text style={styles.btncolor}>Available</Text>
           </View>
         </Pressable>
       </View>
@@ -76,12 +76,16 @@ const styles = StyleSheet.create({
     display: 'flex'
   },
   button:{
+    borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1e1e1e',
     marginHorizontal: 10,
     justifyContent: "center",
     alignItems:"center"
+  },
+  btncolor:{
+    color: 'white',
   },
   desc:{
     width: '100%',

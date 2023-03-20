@@ -10,8 +10,13 @@ export default function LogIn({toggle, stack}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [logging, setLogging] = useState(false)
-
+  const [reset, setReset] = useState(false)
+  
   const logIn = ()=>{
+    if (reset){
+      setReset(false)
+      return
+    }
     if (email === '' || password === '') {
       console.log('empty email or pass')
       return
@@ -40,28 +45,45 @@ export default function LogIn({toggle, stack}) {
         onChangeText={(t)=> setEmail(t)}
         value={email}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(t)=> setPassword(t)}
-        value={password}
-      />
+      {
+        reset?
+        <></>
+        :<TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={(t)=> setPassword(t)}
+          value={password}
+        />
+      }
       <View style={styles.center}>
         <Pressable onPress={()=>logIn()}>
           <View style={styles.button}>
             {
               logging? <ActivityIndicator color='white' size='small'/>
-              :<Text style={{color: 'white'}}>Log in</Text>
+              :<Text style={{color: 'white'}}>{reset?'Reset':'Log in'}</Text>
             }
           </View>
       </Pressable>
       </View>
+      <View style={{height: 20}}></View>
       <View style={styles.center}>
         <Pressable onPress={()=>toggle()}>
             <Text >Don't have an account, SingUp</Text>
         </Pressable>
       </View>
+      <View style={{height: 20}}></View>
+      {
+        reset?
+        <></>:
+        <View style={styles.center}>
+          <Pressable onPress={()=>setReset(true)}>
+              <Text >Forgot password, reset</Text>
+          </Pressable>
+        </View>
+        
+      }
+      
     </View>
   )
 }
@@ -93,6 +115,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20
   },
   button:{
+    borderRadius: 10,
     marginVertical: 10,
     paddingHorizontal: 40,
     paddingVertical: 10,

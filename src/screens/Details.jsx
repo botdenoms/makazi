@@ -34,7 +34,7 @@ export default function Details({navigation, route}) {
                 </View>
                 <Text style={styles.address}>{route.params.location[0]}, {route.params.location[1]}</Text>
                 <Text style={styles.header}>Availability status</Text>
-                <Text style={styles.data}>{route.params.availability == 1?'Available':'Unavailable'}</Text>
+                <Text style={[styles.data, {color: route.params.availability == 1? 'green': 'red'}]}>{route.params.availability == 1?'Available':'Unavailable'}</Text>
                 <Pressable onPress={()=> viewMore()}>
                     <Text style={[styles.header, {fontSize: 18, color:'#1e1e1e'}]}>Owner Contacts</Text>
                 </Pressable>
@@ -87,13 +87,16 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     address:{
-        fontSize: 18,
+        fontSize: 19,
         paddingHorizontal: 20,
+        color: '#1e1e1e',
+        fontWeight: '700'
     },
     header:{
         fontSize: 12,
         paddingHorizontal: 20,
         marginVertical: 5,
+        color: '#1e1e1e'
     },
     data:{
         fontSize: 17,
@@ -103,5 +106,7 @@ const styles = StyleSheet.create({
     dataextra:{
         fontSize: 16,
         marginVertical: 5,
+        color: '#1e1e1e',
+        fontSize: 16
     },
 })

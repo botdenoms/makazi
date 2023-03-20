@@ -88,6 +88,7 @@ export default function SIgnUp({toggle, stack}) {
         onChangeText={(t)=> setPassword(t)}
         value={password}
       />
+      <View style={{height: 40}}></View>
       <View style={styles.center}>
         <Pressable onPress={()=> signUp()}>
           <View style={styles.button}>
@@ -99,6 +100,7 @@ export default function SIgnUp({toggle, stack}) {
           </View>
       </Pressable>
       </View>
+      <View style={{height: 20}}></View>
       <View style={styles.center}>
         <Pressable onPress={()=>toggle()}>
           <Text >Already have an account, Login</Text>
@@ -135,6 +137,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20
   },
   button:{
+    borderRadius: 10,
     marginVertical: 10,
     paddingHorizontal: 40,
     paddingVertical: 10,

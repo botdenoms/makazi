@@ -147,7 +147,7 @@ export default function Listing({navigation}) {
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable onPress={()=> pickPhoto()}>
                   <View style={styles.button}>
-                    <Text>Upload image</Text>
+                    <Text style={styles.btncolor}>Upload image</Text>
                   </View>
                 </Pressable>
               </View>
@@ -161,7 +161,7 @@ export default function Listing({navigation}) {
                   <Pressable onPress={()=> setRental(!rental)}>
                     <View style={styles.button}>
                       {
-                        rental? <Text>Rental</Text> :<Text>Sale</Text>
+                        rental? <Text style={styles.btncolor}>Rental</Text> :<Text style={styles.btncolor}>Sale</Text>
                       }
                     </View>
                   </Pressable>
@@ -171,7 +171,7 @@ export default function Listing({navigation}) {
                   <Pressable onPress={()=> toggleAvail()}>
                     <View style={styles.button}>
                       {
-                        avail? <Text>Available</Text> :<Text>UnAvailable</Text>
+                        avail? <Text style={styles.btncolor}>Available</Text> :<Text style={styles.btncolor}>UnAvailable</Text>
                       }
                     </View>
                   </Pressable>
@@ -198,10 +198,11 @@ export default function Listing({navigation}) {
                   />
                 </View>
               </View>
+              <View style={{height: 30}}></View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable onPress={()=> addListing()}>
                     <View style={styles.button}>
-                      <Text>Publish</Text>
+                      <Text style={styles.btncolor}>Publish</Text>
                     </View>
                 </Pressable>
               </View>
@@ -233,13 +234,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'green'
   },
   button:{
+    borderRadius: 10,
     marginVertical: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1e1e1e',
     marginHorizontal: 20,
     justifyContent: "center",
     alignItems:"center"
+  },
+  btncolor:{
+    color: 'white'
   },
   input:{
     height: 40,

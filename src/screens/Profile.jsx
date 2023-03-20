@@ -95,9 +95,10 @@ export default function Profile({navigation}) {
                                 <Text>Loading...</Text>
                             </View>
                             :<>
-                                <Text style={styles.textbox}>{current.name}</Text>
-                                <Text style={styles.textbox}>{current.telephone}</Text>
-                                <Text style={styles.textbox}>{current.email}</Text>
+                                <Text style={[styles.textbox, {fontSize: 17}]}>{current.name}</Text>
+                                <Text style={[styles.textbox, {fontSize: 17}]}>{current.telephone}</Text>
+                                <Text style={[styles.textbox, {fontSize: 17}]}>{current.email}</Text>
+                                <View style={{borderBottomColor: '#1e1e1e', borderWidth: .5, marginHorizontal: 10, marginTop: 5}}></View>
                                 <Text style={styles.textbox}>My listings</Text>
                             </>
                         }  
@@ -145,7 +146,8 @@ const styles = StyleSheet.create({
     },
     textbox:{
         marginHorizontal: 20,
-        marginVertical: 10
+        marginVertical: 5,
+        color: '#1e1e1e'
     },
     icon:{
         height: 28,

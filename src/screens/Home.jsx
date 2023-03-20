@@ -60,7 +60,6 @@ export default function Home({ navigation }) {
         }
         setHouses([...temp])
         setLoad(false)
-        
     }
 
     return (
@@ -68,7 +67,7 @@ export default function Home({ navigation }) {
             <View style={styles.body}>
                 <View style={styles.appBar}>
                     <Pressable onLongPress={()=> navigation.navigate('Admin')}>
-                        <Text style={{color: '#1e1e1e', fontWeight: '600'}}>Makazi</Text>
+                        <Text style={{color: '#1e1e1e', fontWeight: '800'}}>Makazi</Text>
                     </Pressable>
                     <Pressable onPress={()=> toAccounts()}>
                         <UserCircleIcon size={36} color='#1e1e1e'/>

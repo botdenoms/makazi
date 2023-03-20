@@ -121,7 +121,7 @@ export default function Search({navigation}) {
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <Pressable onPress={()=> doSearch()}>
                         <View style={styles.button}>
-                            <Text>Search</Text>
+                            <Text style={{color: 'white'}}>Search</Text>
                         </View>
                     </Pressable>
                 </View>
@@ -172,10 +172,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'green'
     },
     button:{
+        borderRadius: 10,
         marginVertical: 10,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        backgroundColor: 'grey',
+        backgroundColor: '#1e1e1e',
         marginHorizontal: 20,
         justifyContent: "center",
         alignItems:"center"

@@ -56,15 +56,20 @@ const styles = StyleSheet.create({
       width: '50%',
       flex: 1,
       flexDirection: 'column',
-      fontSize: 15
+      fontSize: 15,
+      color: '#1e1e1e',
+      fontWeight: 'bold'
     },
     adress:{
       fontSize: 17,
       marginBottom: 5,
+      fontWeight: '500',
+      color: '#1e1e1e'
     },
     price:{
       fontSize: 18,
-      color: 'green'
+      color: 'green',
+      fontWeight: '600'
     },
     extras:{
       position: 'absolute',
