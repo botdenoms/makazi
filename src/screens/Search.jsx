@@ -30,7 +30,10 @@ export default function Search({navigation}) {
         if (rent !== '' && county === '') {
             console.log(`searching price only`)
             setSearching(true)
-            const req = await ref.where('price', '<=', Number(rent)).get()
+            const req = await ref.where('price', '<=', Number(rent)).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
             const lst = req.docs
             var temp = []
             for (let index = 0; index < lst.length; index++) {
@@ -48,7 +51,10 @@ export default function Search({navigation}) {
         if (rent === '' && county !== '') {
             console.log(`searching county only`)
             setSearching(true)
-            const req = await ref.where('location', 'array-contains', county).get()
+            const req = await ref.where('location', 'array-contains', county).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
             const lst = req.docs
             var temp = []
             for (let index = 0; index < lst.length; index++) {
@@ -67,7 +73,10 @@ export default function Search({navigation}) {
             console.log(`searching rent and county both`)
             setSearching(true)
             // location first before price check
-            const req = await ref.where('location', 'array-contains', county).get()
+            const req = await ref.where('location', 'array-contains', county).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
             // where('price', '<=', Number(rent)).get()
             const lst = req.docs
             var temp = []

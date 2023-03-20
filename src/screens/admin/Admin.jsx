@@ -20,7 +20,9 @@ export default function Admin({navigation}) {
 
     const logOut = ()=>{
         // log out as admin
-        auth().signOut().then(() => console.log('Admin signed out!'))
+        if (auth().currentUser !== null){
+            auth().signOut().then(() => console.log('Admin signed out!'))
+        }
     }
 
     const tabSwitch = (index) =>{

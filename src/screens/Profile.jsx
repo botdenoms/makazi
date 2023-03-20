@@ -25,7 +25,10 @@ export default function Profile({navigation}) {
     const getlistings = async ()=>{
         // fetch users listings
         if(auth().currentUser.uid !== null){
-            const req = await refList.where('owner', '==', auth().currentUser.uid).get()
+            const req = await refList.where('owner', '==', auth().currentUser.uid).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
             // console.log(req.docs)
             const lst = req.docs
             const temp = []
@@ -45,7 +48,10 @@ export default function Profile({navigation}) {
 
     const getUser = async ()=>{
         if(auth().currentUser.uid !== null){
-            const doc = await ref.doc(auth().currentUser.uid).get()
+            const doc = await ref.doc(auth().currentUser.uid).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
             setCurrent(doc.data())
             setProfile(false)
         } else {

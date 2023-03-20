@@ -132,18 +132,16 @@ export default function Listing({navigation}) {
                   {
                     images.map((u)=> {
                       return (
-                        <View style={{width: 150, height: '100%', backgroundColor: 'red', marginHorizontal: 2}} key={u}>
+                        <View style={{width: 150, height: '100%', marginHorizontal: 2}} key={u}>
                           <Image 
                             source={{uri: u}} 
                             style={{width: '100%', height: '100%'}} 
-                            onLoadStart={()=>setLoading(true)}
-                            onLoadEnd={()=> setLoading(false)}/>
-                          loading? <ActivityIndicator color='#1e1e1e'/>: <></>
+                            progressiveRenderingEnabled={true}/>
                         </View>
                       )
                     })
                   }
-                </ScrollView>
+                  </ScrollView>
                 }
               </View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>

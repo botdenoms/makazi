@@ -46,7 +46,9 @@ export default function Home({ navigation }) {
     const loadHouses = async ()=>{
         // request data
         // const lst = await (await ref.get()).docs
-        const req = await ref.where('verified', '==', true).get()
+        const req = await ref.where('verified', '==', true).get().catch((e)=>{
+            console.log(`error: `, e)
+        })
         const lst = await req.docs
         const temp = []
         for (let index = 0; index < lst.length; index++) {
