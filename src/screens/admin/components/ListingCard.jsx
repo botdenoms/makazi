@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import ImagesCard from '../../../components/ImagesCard'
 
-export default function ListingCard({data}) {
+export default function ListingCard({data, index, remove, approve}) {
 
     const [more, setMore] = useState(false)
 
@@ -32,21 +32,28 @@ export default function ListingCard({data}) {
                         <Text>lat: {data.geoloc[0]}, long: {data.geoloc[1]}</Text>
                     </View>
                     <View style={{flexDirection: 'row', marginVertical: 5, justifyContent: 'space-between'}}>
-                        <Text>bedrooms: {data.bedrooms}</Text>
-                        <Text>bathrooms: {data.bathrooms}</Text>
+                        <Text style={{fontSize: 16}}>bedrooms: {data.bedrooms}</Text>
+                        <Text style={{fontSize: 16}}>bathrooms: {data.bathrooms}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', marginVertical: 5}}>
+                        <Text style={{fontSize: 14, color: '#1e1e1e'}}>
+                            {
+                                data.availability?'Status: Vaccant':'Status: Takken'
+                            }
+                        </Text>
                     </View>
                 </>
                 :<></>
             }
             <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
-                <Pressable>
+                <Pressable onPress={()=>remove(index)}>
                     <View style={[styles.button, {backgroundColor: 'red'}]}>
                         <Text style={{color: 'white'}}>Delete</Text>
                     </View>
                 </Pressable>
                 {
-                    data.verified === true?
-                    <Pressable>
+                    data.verified === false?
+                    <Pressable onPress={()=> approve(index)}>
                         <View style={[styles.button, {backgroundColor: '#1e1e1e'}]}>
                             <Text style={{color: 'white'}}>Approve</Text>
                         </View>

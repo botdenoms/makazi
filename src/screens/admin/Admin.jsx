@@ -12,6 +12,7 @@ export default function Admin({navigation}) {
 
     useEffect(() => {
         // initials stuff
+        logOut()
       return () => logOut()
     }, [])
 

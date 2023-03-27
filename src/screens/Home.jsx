@@ -90,7 +90,7 @@ export default function Home({ navigation }) {
                         </View>
                         :houses.map((h, i)=> <HouseCard to={toDetails} key={h.id} data={h} index={i}/>)
                     }
-
+                    <View style={{height: 10}}></View>
                 </ScrollView>
                 <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
                     <Pressable onPress={()=> navigation.navigate('Search')}>

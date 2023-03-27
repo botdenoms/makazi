@@ -30,13 +30,17 @@ export default function Users() {
         setLoad(false)
     }
 
+    const disableUser = (idx)=>{
+        console.log(`diabling account: ${users[idx].email}`)
+    }
+
     return (
         <View>
             <Text>Users</Text>
             {
                 load?
                 <ActivityIndicator color='#1e1e1e' style={{height:200}}/>
-                :users.map((h, i)=> <UserCard key={i} data={h}/> )
+                :users.map((h, i)=> <UserCard key={i} data={h} index={i} stop={disableUser}/> )
             }
         </View>
     )

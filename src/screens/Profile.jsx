@@ -14,14 +14,40 @@ export default function Profile({navigation}) {
     const [current, setCurrent] = useState({})
     const [profile, setProfile] = useState(true)
     const [fetching, setFetching] = useState(true)
+    const [listings, setlistings] = useState([])
 
     useEffect(()=>{
         getUser()
         getlistings()
     }, [])
 
-    const [listings, setlistings] = useState([])
-
+    const deleteListing = async(idx)=> {
+        // delete listing
+        // remove from list
+        const temp = listings.filter((v, i)=> idx !== i)
+        setlistings([...temp])
+        // update firestore
+        const id = listings[idx].id
+        await refList.doc(id).update({owner: 'none', lister: auth().currentUser.uid}).catch((e)=>{
+            console.log(`error: `, e)
+            return
+        })
+    }
+    
+    const statusChange = async(idx)=>{
+        // toggle availability
+        // change local list 
+        var temp = listings
+        temp[idx].availability  = !temp[idx].availability
+        setlistings([...temp])
+        //update firestore
+        const id = listings[idx].id
+        await refList.doc(id).update({availability: listings[idx].availability}).catch((e)=>{
+            console.log(`error: `, e)
+            return
+        })
+    }
+    
     const getlistings = async ()=>{
         // fetch users listings
         if(auth().currentUser.uid !== null){
@@ -72,10 +98,6 @@ export default function Profile({navigation}) {
         }
     }
 
-    const updatelisting = ()=>{
-        // update the value of listing
-    }
-
     return (
         <SafeAreaView>
             <View style={StyleSheet.body}>
@@ -112,8 +134,18 @@ export default function Profile({navigation}) {
                                 <View style={{width: '100%', height: 500, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text>No listing posted</Text>
                                 </View>
-                                :listings.map((l)=> <ListingCard key={l.id} data={l}/>)
+                                :listings.map((l, i)=> {
+                                 return (
+                                 <ListingCard 
+                                    key={l.id} 
+                                    data={l} 
+                                    index={i} 
+                                    remove={deleteListing} 
+                                    status={statusChange}/>
+                                    )
+                                })
                             }
+                            <View style={{height: 10}}></View>
                         </ScrollView> 
                     </ScrollView>
                 </View>

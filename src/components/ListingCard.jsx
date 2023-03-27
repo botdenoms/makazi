@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
 import {CameraIcon, CheckBadgeIcon} from "react-native-heroicons/solid"
 
-export default function ListingCard({data}) {
+export default function ListingCard({data, remove, status, index}) {
+
   return (
     <View style={styles.body}>
       <View style={styles.card}>
@@ -29,14 +30,18 @@ export default function ListingCard({data}) {
         </View>
       </View>
       <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
-        <Pressable>
+        <Pressable onPress={()=> remove(index)}>
           <View style={styles.button}>
             <Text style={{color: 'red'}}>Remove</Text>
           </View>
         </Pressable>
-        <Pressable>
+        <Pressable onPress={()=> status(index)}>
           <View style={styles.button}>
-            <Text style={styles.btncolor}>Available</Text>
+            <Text style={styles.btncolor}>
+              {
+                data.availability?'UnAvailable':'Vaccant'
+              }
+            </Text>
           </View>
         </Pressable>
       </View>

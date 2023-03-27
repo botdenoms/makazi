@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 
-export default function UserCard({data}) {
+export default function UserCard({data, index, stop}) {
   return (
     <View style={styles.body}>
         <View style={styles.top}>
@@ -8,7 +8,7 @@ export default function UserCard({data}) {
             <Text style={styles.text1}>{data.telephone}</Text>
         </View>
         <Text style={styles.text2}>{data.email}</Text>
-        <Pressable>
+        <Pressable onPress={()=> stop(index)}>
           <View style={styles.button}>
             <Text style={{color: 'white'}}>Disable</Text>
           </View>
