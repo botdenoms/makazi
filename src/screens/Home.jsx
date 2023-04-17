@@ -2,17 +2,18 @@ import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, ActivityIn
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
-import HouseCard from '../components/HouseCard'
+import House from '../components/House'
 
-import { MagnifyingGlassIcon, UserCircleIcon } from "react-native-heroicons/solid"
+import { MagnifyingGlassIcon, UserCircleIcon, HomeIcon} from "react-native-heroicons/solid"
 import { useEffect, useState } from 'react'
+
 
 export default function Home({ navigation }) {
 
     const [houses, setHouses] = useState([])
     const [user, setUser] = useState(null)
     const [load, setLoad] = useState(true)
-    // const [idx, setIdx] = useState(0)
+    const [idx, setIdx] = useState(0)
 
     const ref = firestore().collection('listings')
 
@@ -65,18 +66,15 @@ export default function Home({ navigation }) {
     return (
         <SafeAreaView>
             <View style={styles.body}>
-                <View style={styles.appBar}>
-                    <Pressable onLongPress={()=> navigation.navigate('Admin')}>
-                        <Text style={{color: '#1e1e1e', fontWeight: '800'}}>Makazi</Text>
-                    </Pressable>
-                    <Pressable onPress={()=> toAccounts()}>
-                        <UserCircleIcon size={36} color='#1e1e1e'/>
-                    </Pressable>
-                </View>
                 <ScrollView 
                     contentInsetAdjustmentBehavior="automatic"
                     style={styles.scroll}
                 >
+                    <View style={styles.appBar}>
+                        <Pressable onLongPress={()=> navigation.navigate('Admin')}>
+                            <Text style={{color: '#1e1e1e', fontWeight: '800'}}>Makazi</Text>
+                        </Pressable>
+                    </View>
                     <Text>Featured</Text>
                     {
                         load?
@@ -88,14 +86,27 @@ export default function Home({ navigation }) {
                         <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
                             <Text>Unavailable currently</Text>
                         </View>
-                        :houses.map((h, i)=> <HouseCard to={toDetails} key={h.id} data={h} index={i}/>)
+                        :houses.map((h, i)=> <House to={toDetails} key={h.id} data={h} index={i}/>)
                     }
                     <View style={{height: 10}}></View>
                 </ScrollView>
-                <View style={{width: '100%',justifyContent: 'center', bottom: 20, position: 'absolute', alignItems: 'center'}}>
+                <View style={{width: '100%',justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 2}}>
+                    <Pressable>
+                        <View style={[[styles.float, {backgroundColor: idx == 0?"#1e1e1e":"white"}]]}>
+                            <HomeIcon size={28} color='#fff'/>
+                            <Text style={{color: idx == 0?'#fff':'#1e1e1e'}}>Home</Text>
+                        </View>
+                    </Pressable>
                     <Pressable onPress={()=> navigation.navigate('Search')}>
-                        <View style={styles.float}>
-                            <MagnifyingGlassIcon size={28} color='#fff'/>
+                        <View style={[styles.float, {backgroundColor: idx == 1?"#1e1e1e":"white"}]}>
+                            <MagnifyingGlassIcon size={28} color={idx == 1?'#fff':'#1e1e1e'}/>
+                            <Text style={{color: idx == 1?'#fff':'#1e1e1e'}}>Search</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable onPress={()=> toAccounts()}>
+                        <View style={[styles.float, {backgroundColor: idx == 2?"#1e1e1e":"white"}]}>
+                            <UserCircleIcon size={28} color={idx == 2?'#fff':'#1e1e1e'}/>
+                            <Text style={{color: idx == 2?'#fff':'#1e1e1e'}}>Account</Text>
                         </View>
                     </Pressable>
                 </View>
@@ -108,15 +119,12 @@ const styles = StyleSheet.create({
     body:{
         width: '100%',        
         height: '100%',
-        // backgroundColor: '#1e1e1e'
+        backgroundColor: 'white'
     },
     appBar:{
-        height: 50,
-        // backgroundColor: 'red',
+        height: 40,
         width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 10
     },
@@ -134,15 +142,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'green'
     },
     float:{
-        // position: 'absolute',
-        // bottom: 20,
-        // left: '44%',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 5,
         height: 48,
-        width: 48,
-        borderRadius: 24,
+        paddingHorizontal: 10,
+        borderRadius: 5,
         backgroundColor: '#1e1e1e'
     }
 })

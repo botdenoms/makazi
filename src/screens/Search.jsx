@@ -4,8 +4,9 @@ import CustomInput from '../components/CustomInput'
 import firestore from '@react-native-firebase/firestore'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
-import HouseCard from '../components/HouseCard'
+import House from '../components/House'
 import { useState } from 'react'
+
 
 export default function Search({navigation}) {
     
@@ -140,7 +141,7 @@ export default function Search({navigation}) {
                     </View>
                     :<ScrollView style={{paddingHorizontal: 10}}>
                     {
-                        results.map((r, i)=> <HouseCard key={i} data={r} to={toDetails} index={i}/>)
+                        results.map((r, i)=> <House key={i} data={r} to={toDetails} index={i}/>)
                     }
                 </ScrollView>
                 }
@@ -153,7 +154,8 @@ export default function Search({navigation}) {
 const styles = StyleSheet.create({
     body:{
         width:'100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: 'white'
     },
     appBar:{
         height: 50,

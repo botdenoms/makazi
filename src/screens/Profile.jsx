@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
     body:{
         position: 'relative',
         width:'100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: 'white'
     },
     appBar:{
         height: '8%',

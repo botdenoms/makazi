@@ -39,10 +39,9 @@ export default function Accounts({navigation}) {
 
 const styles = StyleSheet.create({
     body:{
-        // position: "relative",
         width: '100%',        
         height: '100%',
-        // backgroundColor: '#1e1e1e'
+        backgroundColor: 'white'
     },
     appBar:{
         height: 50,

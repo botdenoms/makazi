@@ -1,16 +1,35 @@
 import { View, SafeAreaView, StyleSheet, Text, Pressable } from 'react-native'
 import ImagesCard from '../components/ImagesCard'
 
+import firestore from '@react-native-firebase/firestore'
+
 import { ChevronLeftIcon, MapPinIcon } from "react-native-heroicons/solid"
 import { useState } from 'react'
 
 export default function Details({navigation, route}) {
 
+    const ref = firestore().collection('users')
     const [more, setMore] = useState(false)
+    const [current, setCurrent] = useState({})
+    // const [profile, setProfile] = useState(true)
 
     const viewMore = ()=>{
         // fetch & show owner details
-        setMore(true)
+        getUser()
+    }
+
+    const getUser = async ()=>{
+        const owner = route.params.owner
+        if(owner !== null){
+            const doc = await ref.doc(owner).get().catch((e)=>{
+                console.log(`error: `, e)
+                return
+            })
+            setCurrent(doc.data())
+            setMore(true)
+        } else {
+            console.log('no user currently')
+        }
     }
 
     return (
@@ -41,8 +60,9 @@ export default function Details({navigation, route}) {
                 {
                     more?
                     <>
-                        <Text style={styles.data}>Owner.email.com</Text>
-                        <Text style={styles.data}>Telphone no</Text> 
+                        <Text style={styles.data}>{current.name}</Text>
+                        <Text style={styles.data}>{current.telephone}</Text>
+                        <Text style={styles.data}>{current.email}</Text>
                     </>
                     :<></>
                 }
@@ -54,7 +74,8 @@ export default function Details({navigation, route}) {
 const styles = StyleSheet.create({
     body:{
         width:'100%',
-        height: '100%'
+        height: '100%',
+        backgroundColor: 'white',
     },
     appBar:{
         position: 'absolute',
@@ -99,9 +120,10 @@ const styles = StyleSheet.create({
         color: '#1e1e1e'
     },
     data:{
-        fontSize: 17,
+        fontSize: 15,
         marginVertical: 5,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        color: '#111eee'
     },
     dataextra:{
         fontSize: 16,

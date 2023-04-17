@@ -15,15 +15,20 @@ export default function LogIn({toggle}) {
       return
     }
     console.log('no empty stuff')
-    setLogging(true)
-    // log in checks & create user obj
-    auth().signInWithEmailAndPassword(email, password).then((e)=>{
-      console.log(`signed in as ${e.user.email}`)
-      setLogging(false)
-      toggle(true)
-    }).catch((e)=>{
-      console.log(`this error: ${e}`)
-    })
+    if (email === 'admin@gmail.com') {
+      setLogging(true)
+      // log in checks & create user obj
+      auth().signInWithEmailAndPassword(email, password).then((e)=>{
+        console.log(`signed in as ${e.user.email}`)
+        setLogging(false)
+        toggle(true)
+      }).catch((e)=>{
+        console.log(`this error: ${e}`)
+      })
+    }else{
+      console.log('wrong email')
+    }
+    
   }
 
   return (
@@ -92,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e1e1e',
     marginHorizontal: 20,
     justifyContent: "center",
-    alignItems:"center"
+    alignItems:"center",
+    borderRadius: 5,
   }
 })
