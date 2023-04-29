@@ -12,23 +12,29 @@ export default function SIgnUp({toggle, stack}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [signing, setSigning] = useState(false)
+  const [error, setError] = useState(false)
+  const [emsg, setEmsg] = useState('')
 
   const signUp = ()=>{
     // check error in inputs
+    setError(false)
     var temp = ''
     if (email === '' || password === null || name === '' || telephone === '') {
-      console.log('no empty fields allowed')
+      setError(true)
+      setSigning(false)
+      setEmsg('no empty fields allowed')
+      // console.log('no empty fields allowed')
       return
     }
-    console.log('no empty fields found')
+    // console.log('no empty fields found')
     setSigning(true)
     // create auth user, get uuid
     auth()
     .createUserWithEmailAndPassword(email, password)
     .then((c) => {
-      console.log('User account created & signed in!')
+      // console.log('User account created & signed in!')
       temp = c.user.uid
-      console.log(`uid ${temp}`)
+      // console.log(`uid ${temp}`)
       // create users collection id= uuid
       usersCol.doc(temp).set({
         name,
@@ -40,20 +46,28 @@ export default function SIgnUp({toggle, stack}) {
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!')
+        setError(true)
+        setSigning(false)
+        setEmsg('That email address is already in use!')
+        // console.log('That email address is already in use!')
       }
 
       if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!')
+        setError(true)
+        setSigning(false)
+        setEmsg('That email address is invalid!')
+        // console.log('That email address is invalid!')
       }
 
       if (error.code === 'auth/weak-password'){
-        console.log('weak password')
+        setError(true)
+        setSigning(false)
+        setEmsg('weak password')
+        // console.log('weak password')
       }
-      console.error(error)
+      // console.error(error)
       return
     })
-    toggle()
   }
 
   return (
@@ -106,6 +120,12 @@ export default function SIgnUp({toggle, stack}) {
           <Text >Already have an account, Login</Text>
         </Pressable>  
       </View>
+      {
+      error && 
+      <View style={styles.center}>
+        <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+      </View>
+      }
     </View>
   )
 }

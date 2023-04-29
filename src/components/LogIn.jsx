@@ -11,25 +11,46 @@ export default function LogIn({toggle, stack}) {
   const [password, setPassword] = useState('')
   const [logging, setLogging] = useState(false)
   const [reset, setReset] = useState(false)
+  const [error, setError] = useState(false)
+  const [emsg, setEmsg] = useState('')
   
   const logIn = ()=>{
+    setError(false)
     if (reset){
       setReset(false)
       return
     }
     if (email === '' || password === '') {
-      console.log('empty email or pass')
+      setError(true)
+      setLogging(false)
+      setEmsg('empty email or pass')
+      // console.log('empty email or pass')
       return
     }
-    console.log('no empty stuff')
+    // console.log('no empty stuff')
     setLogging(true)
     // log in checks & create user obj
     auth().signInWithEmailAndPassword(email, password).then((e)=>{
-      console.log(`signed in as ${e.user.email}`)
+      // console.log(`signed in as ${e.user.email}`)
       setLogging(false)
       stack.navigate('profile')
     }).catch((e)=>{
-      console.log(`this error: ${e}`)
+      // console.log(`this error: ${e}`)
+      if (e.code === 'auth/invalid-email') {
+        setError(true)
+        setLogging(false)
+        setEmsg('That email address is invalid!')
+        // console.log('That email address is invalid!')
+      }
+      if (e.code === 'auth/user-not-found') {
+        setError(true)
+        setLogging(false)
+        setEmsg('No such user exist!')
+        // console.log('That email address is invalid!')
+      }
+      setError(true)
+      setLogging(false)
+      setEmsg('Wrong pass or email')
     })
   }
 
@@ -83,7 +104,12 @@ export default function LogIn({toggle, stack}) {
         </View>
         
       }
-      
+      {
+        error && 
+        <View style={styles.center}>
+          <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+        </View>
+      }
     </View>
   )
 }
