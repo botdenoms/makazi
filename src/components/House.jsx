@@ -11,6 +11,13 @@ export default function House({to, data, index}) {
             <Text>No images</Text> 
             :<Image source={{uri : data.images[0]}} style={styles.img}/>
           }
+          <View style={styles.extrasTop}>
+            <Text style={{color: 'green', fontWeight: '800', fontSize: 20}}>{data.rental ? "Rental": "For Sale"}</Text>
+            {
+              data.units &&
+              <Text style={{color: 'green', fontWeight: '800'}}>{data.units} Left</Text>
+            }
+          </View>
           <View style={styles.extras}>
             <CameraIcon color='#1e1e1e'/>
             <Text style={{marginLeft: 5}}>{data.images.length}</Text>
@@ -69,6 +76,16 @@ const styles = StyleSheet.create({
       fontSize: 18,
       color: 'green',
       fontWeight: '600'
+    },
+    extrasTop:{
+      position: 'absolute',
+      top: 5,
+      left: 5,
+      width: '95%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     extras:{
       position: 'absolute',

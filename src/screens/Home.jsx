@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, Pressable, ActivityIndicator, Image } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
@@ -71,8 +71,9 @@ export default function Home({ navigation }) {
                     style={styles.scroll}
                 >
                     <View style={styles.appBar}>
+                        <Image source={require('../components/makazi.png') } style={{height: 32, width: 32}}/>
                         <Pressable onLongPress={()=> navigation.navigate('Admin')}>
-                            <Text style={{color: '#1e1e1e', fontWeight: '800'}}>Makazi</Text>
+                            <Text style={{color: '#1e1e1e', fontWeight: '800', marginLeft: 5, fontSize: 20}}>Makazi</Text>
                         </Pressable>
                     </View>
                     <Text>Featured</Text>
@@ -124,9 +125,9 @@ const styles = StyleSheet.create({
     appBar:{
         height: 40,
         width: '100%',
-        justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingHorizontal: 10
     },
     scroll:{
         flex: 1,

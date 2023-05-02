@@ -21,11 +21,16 @@ export default function Listing({navigation}) {
   const [bed, setBed] = useState(1)
   const [bath, setBath] = useState(1)
   const [rent, setRent] = useState(1)
+  const [units, setUnits] = useState(1)
   const [images, setImages] = useState([])
   const [avail, setAvail] = useState(true)
   const [rental, setRental] = useState(true)
   const [geo, setGeo] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [emsg, setEmsg] = useState('')
+  const [sucess, setSucess] = useState(false)
+  const [smsg, setSmsg] = useState('')
+
 
   const toggleAvail = ()=>{
     setAvail(!avail)
@@ -38,23 +43,29 @@ export default function Listing({navigation}) {
     setBath(0)
     setBed(0)
     setRent(0),
+    setUnits(0)
     setImages([])
     setGeo([])
   }
 
   const addListing = async () =>{
+    setError(false)
+    setSucess(false)
     // check if input fields are valid
     if(images.length < 1 || descrip === '' || county === '' || adress === ''){
-      console.log('empty fieild found')
+      // console.log('empty fieild found')
+      setEmsg('Please fill all the fields')
+      setError(true)
     }else{
       // create a listing
       if (auth().currentUser.uid !== null) {
-        console.log(`user id: ${auth().currentUser.uid}`)
+        // console.log(`user id: ${auth().currentUser.uid}`)
         const _documentRef = await ref.doc().set({
           owner: auth().currentUser.uid,
           description: descrip,
           location: [county, adress],
           price: Number(rent),
+          units: Number(units),
           bathrooms: Number(bath),
           bedrooms: Number(bed),
           images,
@@ -65,19 +76,29 @@ export default function Listing({navigation}) {
           verified: false
         })
         clearInputs()
+        setSmsg('Listing create succesfully')
+        setSucess(true)
         // console.log(`doc id: ${documentRef}`)
       }else{
-        console.log('no user found')
+        // console.log('no user found')
+        setEmsg('no user found')
+        setError(true)
       }
     }
   }
 
   const pickPhoto = async()=>{
+    setError(false)
+    setSucess(false)
     await launchImageLibrary({mediaType: 'photo'}, async (result)=>{
       if (result.didCancel) { 
-        console.log('Cancelled')
+        // console.log('Cancelled')
+        setEmsg('Image Pick cancelled')
+        setError(true)
       } else if (result.error) { 
-        console.log('Error', result.errorMessage)
+        setEmsg(result.errorMessage)
+        setError(true)
+        // console.log('Error', result.errorMessage)
       } else { 
         // console.log(result)
         // console.log(`file path: ${result.assets[0].uri}`)
@@ -85,6 +106,8 @@ export default function Listing({navigation}) {
         ref.putFile(result.assets[0].uri).then(async (e)=>{
           const url = await ref.getDownloadURL()
           setImages([...images, url])
+          setSmsg('File Uploaded succesfully')
+          setSucess(true)
           // console.log(`url path: ${url}`)
         })
       }
@@ -177,8 +200,9 @@ export default function Listing({navigation}) {
                   </Pressable>
                 </View>
               </View>
-              <View style={{justifyContent: 'center', alignItems:'flex-start', paddingHorizontal: 20}}>
+              <View style={{flexDirection: 'row', paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between'}}>
                 <CustomInput title='Rent/Cost' type={1} handleChange={setRent}/>
+                <CustomInput title='Units' type={0} handleChange={setUnits}/>
               </View>
               <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>
                 <View>
@@ -198,6 +222,18 @@ export default function Listing({navigation}) {
                   />
                 </View>
               </View>
+              {
+                sucess && 
+                <View style={{justifyContent: 'center', alignItems:'center', marginVertical: 10}}>
+                  <Text style={{color: 'green'}}>{smsg}</Text>
+                </View>
+              }
+              {
+                error && 
+                <View style={{justifyContent: 'center', alignItems:'center', marginVertical: 20}}>
+                  <Text style={{color: 'red'}}>{emsg}</Text>
+                </View>
+              }
               <View style={{height: 30}}></View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable onPress={()=> addListing()}>

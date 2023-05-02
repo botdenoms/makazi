@@ -46,7 +46,13 @@ export default function Details({navigation, route}) {
                     </Pressable>
                 </View>
                 <ImagesCard images={route.params.images}/>
-                <Text style={styles.price}>{route.params.price} ksh</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={styles.price}>{route.params.price} ksh</Text>
+                    {
+                        route.params.units &&
+                        <Text style={styles.price}>{route.params.units} Left</Text>
+                    }
+                </View>
                 <View style={styles.more}>
                     <Text style={styles.dataextra}>{route.params.bedrooms} Bedrooms</Text>
                     <Text style={styles.dataextra}>{route.params.bathrooms} Bathrooms</Text>
