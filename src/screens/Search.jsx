@@ -17,6 +17,8 @@ export default function Search({navigation}) {
     const [county, setCounty] = useState('')
     const [bed, setBed] = useState('')
     const [results, setResults] = useState([])
+    const [error, setError] = useState(false)
+    const [emsg, setEmsg] = useState('')
 
     const toDetails = (index)=>{
         navigation.navigate('Details', { ...results[index]})
@@ -25,60 +27,88 @@ export default function Search({navigation}) {
     const doSearch= async ()=>{
         // check fields
         if (rent === '' && county === '') {
-            console.log(`atleast one is to be picked option`)
+            setEmsg('atleast one is to be picked option')
+            setError(true)
+            setSearching(false)
         }
         // only rent searched
         if (rent !== '' && county === '') {
-            console.log(`searching price only`)
+            // console.log(`searching price only`)
             setSearching(true)
             const req = await ref.where('price', '<=', Number(rent)).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error from database')
+                setError(true)
+                setSearching(false)
                 return
             })
-            const lst = req.docs
-            var temp = []
-            for (let index = 0; index < lst.length; index++) {
-                const element = {
-                    id : lst[index].id,
-                    ...lst[index].data()
+            if (!req.empty) {
+                const lst = req.docs
+                var temp = []
+                for (let index = 0; index < lst.length; index++) {
+                    const element = {
+                        id : lst[index].id,
+                        ...lst[index].data()
+                    }
+                    temp.push(element)
                 }
-                temp.push(element)
+                temp = temp.filter((i)=> i.verified === true)
+                setResults([...temp])
+                setSearching(false)
+            }else{
+                setEmsg('Empty results')
+                setError(true)
+                setSearching(false)
             }
-            temp = temp.filter((i)=> i.verified === true)
-            setResults([...temp])
-            setSearching(false)
+            
         }
         
         if (rent === '' && county !== '') {
-            console.log(`searching county only`)
+            // console.log(`searching county only`)
             setSearching(true)
             const req = await ref.where('location', 'array-contains', county).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error from database')
+                setError(true)
+                setSearching(false)
                 return
             })
-            const lst = req.docs
-            var temp = []
-            for (let index = 0; index < lst.length; index++) {
-                const element = {
-                    id : lst[index].id,
-                    ...lst[index].data()
+            if (!req.empty) {
+                const lst = req.docs
+                var temp = []
+                for (let index = 0; index < lst.length; index++) {
+                    const element = {
+                        id : lst[index].id,
+                        ...lst[index].data()
+                    }
+                    temp.push(element)
                 }
-                temp.push(element)
+                temp = temp.filter((i)=> i.verified === true)
+                setResults([...temp])
+                setSearching(false)
+            }else{
+                setEmsg('Empty results')
+                setError(true)
+                setSearching(false)
             }
-            temp = temp.filter((i)=> i.verified === true)
-            setResults([...temp])
-            setSearching(false)
+            
         }
 
         if (rent !== '' && county !== '') {
-            console.log(`searching rent and county both`)
+            // console.log(`searching rent and county both`)
             setSearching(true)
             // location first before price check
             const req = await ref.where('location', 'array-contains', county).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error from database')
+                setError(true)
+                setSearching(false)
                 return
             })
             // where('price', '<=', Number(rent)).get()
+            if(req.empty){
+                setEmsg('Empty results')
+                setError(true)
+                setSearching(false)
+                return
+            }
             const lst = req.docs
             var temp = []
             for (let index = 0; index < lst.length; index++) {
@@ -138,6 +168,12 @@ export default function Search({navigation}) {
                     <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
                         <Text>No results found or</Text>
                         <Text>You have not make any search</Text>
+                        {
+                            error && 
+                            <View>
+                                <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                            </View>
+                        }
                     </View>
                     :<ScrollView style={{paddingHorizontal: 10}}>
                     {

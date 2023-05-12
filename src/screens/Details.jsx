@@ -23,7 +23,8 @@ export default function Details({navigation, route}) {
         const owner = route.params.owner
         if(owner !== null){
             const doc = await ref.doc(owner).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error fetching data')
+                setError(true)
                 return
             })
             if(doc.exists){
@@ -38,8 +39,6 @@ export default function Details({navigation, route}) {
             setError(true)
         }
     }
-
-    
 
     return (
         <SafeAreaView>
@@ -90,7 +89,7 @@ export default function Details({navigation, route}) {
                 }
                 {
                     error && 
-                    <View style={styles.center}>
+                    <View >
                         <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
                     </View>
                 }

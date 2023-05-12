@@ -14,6 +14,8 @@ export default function Home({ navigation }) {
     const [user, setUser] = useState(null)
     const [load, setLoad] = useState(true)
     const [idx, setIdx] = useState(0)
+    const [error, setError] = useState(false)
+    const [emsg, setEmsg] = useState('')
 
     const ref = firestore().collection('listings')
 
@@ -47,20 +49,32 @@ export default function Home({ navigation }) {
     const loadHouses = async ()=>{
         // request data
         // const lst = await (await ref.get()).docs
+        setError(false)
         const req = await ref.where('verified', '==', true).get().catch((e)=>{
-            console.log(`error: `, e)
+            setEmsg('Error fetching data')
+            setError(true)
+            setLoad(false)
+            return
         })
-        const lst = await req.docs
-        const temp = []
-        for (let index = 0; index < lst.length; index++) {
-            const element = {
-                id : lst[index].id,
-                ...lst[index].data()
+        if (!req.empty){
+            const lst = await req.docs
+            const temp = []
+            for (let index = 0; index < lst.length; index++) {
+                const element = {
+                    id : lst[index].id,
+                    ...lst[index].data()
+                } 
+                temp.push(element)
             }
-            temp.push(element)
+            setHouses([...temp])
+            setLoad(false)
+            setError(false)
+            return
+        }else{
+            setEmsg('no listing found')
+            setLoad(false)
+            setError(true)
         }
-        setHouses([...temp])
-        setLoad(false)
     }
 
     return (
@@ -76,16 +90,34 @@ export default function Home({ navigation }) {
                             <Text style={{color: '#1e1e1e', fontWeight: '800', marginLeft: 5, fontSize: 20}}>Makazi</Text>
                         </Pressable>
                     </View>
-                    <Text>Featured</Text>
+                    <Text style={{color: '#1e1e1e'}}>Featured</Text>
                     {
                         load?
                         <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
                             {/* <Text>Loading...</Text> */}
                             <ActivityIndicator color='#1e1e1e' animating={true}/>
+                            {
+                                error && 
+                                <View>
+                                    <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                                    <Pressable style={styles.btn} onPress={()=>loadHouses()}>
+                                        <Text style={{color: "green"}}>Reload</Text>
+                                    </Pressable>
+                                </View>
+                            }
                         </View>
                         : houses.length < 1?
                         <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text>Unavailable currently</Text>
+                            <Text style={{color: '#1e1e1e'}}>Unavailable currently</Text>
+                            {
+                                error && 
+                                <View>
+                                    <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                                    <Pressable style={styles.btn} onPress={()=>loadHouses()}>
+                                        <Text style={{color: "green"}}>Reload</Text>
+                                    </Pressable>
+                                </View>
+                            }
                         </View>
                         :houses.map((h, i)=> <House to={toDetails} key={h.id} data={h} index={i}/>)
                     }
@@ -150,5 +182,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
         backgroundColor: '#1e1e1e'
+    },
+    btn:{
+        padding: 5,
+        backgroundColor: "#c1c1c1",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
     }
 })

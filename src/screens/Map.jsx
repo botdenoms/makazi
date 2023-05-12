@@ -1,24 +1,39 @@
 import { View, SafeAreaView, StyleSheet, Pressable } from 'react-native'
 import MapView, {Marker} from 'react-native-maps'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
 
 export default function Map({navigation, route}) {
-  const fallback = {
-    // nairobi cordinate
+  const [ltlg, setLtLg] = useState({
     latitude: -1.2863,
     longitude: 36.8172
-  }
-  const target = {
-    latitude: Number(route.params.lat),
-    longitude: Number(route.params.long)
-  }
+  })
+  const [error, setError] = useState(false)
+  const [emsg, setEmsg] = useState('')
 
   const checkLatLng = ()=>{
+    const fallback = {
+      // nairobi cordinate
+      latitude: -1.2863,
+      longitude: 36.8172
+    }
     if (!route.params.lat || !route.params.long) {
-      target.latitude = fallback.latitude
-      target.longitude = fallback.longitude
+      setEmsg('Empty geo location data')
+      setError(true)
+      setLtLg({...fallback})
+    }else{
+      try {
+        const target = {
+          latitude: Number(route.params.lat),
+          longitude: Number(route.params.long)
+        }
+        setLtLg({...target})
+      } catch (error) {
+        setEmsg('Error parsing geo location')
+        setError(true)
+        setLtLg({...fallback})
+      }
     }
   }
 
@@ -35,17 +50,26 @@ export default function Map({navigation, route}) {
                 <ChevronLeftIcon size={28} color='#1e1e1e'/>
               </Pressable>
             </View>
+            {
+              error && 
+              <View style={styles.error}>
+                  <Text style={{color: 'white', margin: 20}}>{emsg}</Text>
+                  <Pressable style={styles.btn} onPress={()=>setError(false)}>
+                      <Text style={{color: "green"}}>Dismiss</Text>
+                  </Pressable>
+              </View>
+            }
             <MapView 
               style={styles.map}
               initialRegion={{
-                latitude: target.latitude,
-                longitude: target.longitude,
+                latitude: ltlg.latitude,
+                longitude: ltlg.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}>
                 <Marker coordinate={{
-                  latitude: target.latitude,
-                  longitude: target.longitude
+                  latitude: ltlg.latitude,
+                  longitude: ltlg.longitude
                 }} title="Here"/>
               </MapView>
         </View>
@@ -75,5 +99,18 @@ const styles = StyleSheet.create({
   map:{
     width: '100%',
     height: '100%'
-  }
+  },
+  error:{
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    zIndex: 3,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: "red"
+  },
 })

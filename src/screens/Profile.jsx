@@ -15,6 +15,8 @@ export default function Profile({navigation}) {
     const [profile, setProfile] = useState(true)
     const [fetching, setFetching] = useState(true)
     const [listings, setlistings] = useState([])
+    const [error, setError] = useState(false)
+    const [emsg, setEmsg] = useState('')
 
     useEffect(()=>{
         getUser()
@@ -49,39 +51,51 @@ export default function Profile({navigation}) {
     }
     
     const getlistings = async ()=>{
+        setFetching(true)
+        setError(false)
         // fetch users listings
         if(auth().currentUser.uid !== null){
             const req = await refList.where('owner', '==', auth().currentUser.uid).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error getting user Listings information')
+                setError(true)
                 return
             })
             // console.log(req.docs)
-            const lst = req.docs
-            const temp = []
-            for (let index = 0; index < lst.length; index++) {
-                const element = {
-                    id : lst[index].id,
-                    ...lst[index].data()
+            if (!req.empty) {
+                const lst = req.docs
+                const temp = []
+                for (let index = 0; index < lst.length; index++) {
+                    const element = {
+                        id : lst[index].id,
+                        ...lst[index].data()
+                    }
+                    temp.push(element)
                 }
-                temp.push(element)
+                setlistings([...temp])
+                setFetching(false)
             }
-            setlistings([...temp])
-            setFetching(false)
         } else {
-            console.log('no current listings')
+            setEmsg('This is wierd and impossible')
+            setError(true)
         }
     }
 
     const getUser = async ()=>{
+        setProfile(true)
+        setError(false)
         if(auth().currentUser.uid !== null){
             const doc = await ref.doc(auth().currentUser.uid).get().catch((e)=>{
-                console.log(`error: `, e)
+                setEmsg('Error getting user information')
+                setError(true)
                 return
             })
-            setCurrent(doc.data())
-            setProfile(false)
+            if (doc.exists) {
+                setCurrent(doc.data())
+                setProfile(false)
+            }
         } else {
-            console.log('no user currently')
+            setEmsg('no user currently')
+            setError(true)
         }
     }
 
@@ -115,6 +129,15 @@ export default function Profile({navigation}) {
                             profile?
                             <View style={{width: '100%', height: 200, justifyContent: 'center', alignItems: 'center'}}>
                                 <Text>Loading...</Text>
+                                {
+                                    error && 
+                                    <View>
+                                        <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                                        <Pressable style={styles.btn} onPress={()=>getUser()}>
+                                            <Text style={{color: "green"}}>Reload</Text>
+                                        </Pressable>
+                                    </View>
+                                }
                             </View>
                             :<>
                                 <Text style={[styles.textbox, {fontSize: 17}]}>{current.name}</Text>
@@ -129,21 +152,30 @@ export default function Profile({navigation}) {
                                 fetching?
                                 <View style={{width: '100%', height: 400, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text>Loading...</Text>
+                                    {
+                                        error && 
+                                        <View>
+                                            <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                                            <Pressable style={styles.btn} onPress={()=>getlistings()}>
+                                                <Text style={{color: "green"}}>Reload</Text>
+                                            </Pressable>
+                                        </View>
+                                    }
                                 </View>
                                 : listings.length < 1?
                                 <View style={{width: '100%', height: 500, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text>No listing posted</Text>
                                 </View>
                                 :listings.map((l, i)=> {
-                                 return (
-                                 <ListingCard 
-                                    key={l.id} 
-                                    data={l} 
-                                    index={i} 
-                                    remove={deleteListing} 
-                                    status={statusChange}/>
-                                    )
-                                })
+                                return (
+                                <ListingCard 
+                                key={l.id} 
+                                data={l} 
+                                index={i} 
+                                remove={deleteListing} 
+                                status={statusChange}/>
+                                )
+                            })
                             }
                             <View style={{height: 10}}></View>
                         </ScrollView> 
@@ -196,5 +228,12 @@ const styles = StyleSheet.create({
         width: 48,
         borderRadius: 24,
         backgroundColor: '#1e1e1e'
+    },
+    btn:{
+        padding: 5,
+        backgroundColor: "#c1c1c1",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5
     }
 })
