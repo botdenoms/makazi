@@ -40,29 +40,34 @@ export default function SIgnUp({toggle, stack}) {
         name,
         email,
         telephone,
+      }).catch(()=> {
+        setEmsg('Record creation failed, try again')
+        setError(true)
+        setSigning(false)
+        return
       })
       setSigning(false)
       stack.navigate('profile')
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
+        setEmsg('That email address is already in use!')
         setError(true)
         setSigning(false)
-        setEmsg('That email address is already in use!')
         // console.log('That email address is already in use!')
       }
 
       if (error.code === 'auth/invalid-email') {
+        setEmsg('That email address is invalid!')
         setError(true)
         setSigning(false)
-        setEmsg('That email address is invalid!')
         // console.log('That email address is invalid!')
       }
 
       if (error.code === 'auth/weak-password'){
+        setEmsg('weak password')
         setError(true)
         setSigning(false)
-        setEmsg('weak password')
         // console.log('weak password')
       }
       // console.error(error)

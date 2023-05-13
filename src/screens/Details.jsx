@@ -11,7 +11,8 @@ export default function Details({navigation, route}) {
     const ref = firestore().collection('users')
     const [more, setMore] = useState(false)
     const [current, setCurrent] = useState({})
-    // const [profile, setProfile] = useState(true)
+    const [error, setError] = useState(false)
+    const [emsg, setEmsg] = useState('')
 
     const viewMore = ()=>{
         // fetch & show owner details
@@ -25,12 +26,20 @@ export default function Details({navigation, route}) {
                 console.log(`error: `, e)
                 return
             })
-            setCurrent(doc.data())
-            setMore(true)
+            if(doc.exists){
+                setCurrent(doc.data())
+                setMore(true)
+                return
+            }
+            setEmsg('No owner details found database')
+            setError(true)
         } else {
-            console.log('no user currently')
+            setEmsg('No owner details found')
+            setError(true)
         }
     }
+
+    
 
     return (
         <SafeAreaView>
@@ -64,11 +73,26 @@ export default function Details({navigation, route}) {
                 {
                     more?
                     <>
-                        <Text style={styles.data}>{current.name}</Text>
-                        <Text style={styles.data}>{current.telephone}</Text>
-                        <Text style={styles.data}>{current.email}</Text>
+                        <Text style={styles.data}>
+                            {current.name !== null && current.name}
+                            {!current.name && "No name found"}
+                        </Text>
+                        <Text style={styles.data}>
+                            {current.telephone !== null  && current.telephone}
+                            {!current.telephone && "No phone found"}
+                        </Text>
+                        <Text style={styles.data}>
+                            {current.email !== null && current.email}
+                            {!current.email && "No mail found"}
+                        </Text>
                     </>
                     :<></>
+                }
+                {
+                    error && 
+                    <View style={styles.center}>
+                        <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+                    </View>
                 }
             </View>
         </SafeAreaView>

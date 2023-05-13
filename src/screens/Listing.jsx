@@ -52,7 +52,7 @@ export default function Listing({navigation}) {
     setError(false)
     setSucess(false)
     // check if input fields are valid
-    if(images.length < 1 || descrip === '' || county === '' || adress === ''){
+    if(images.length < 1 || descrip === '' || county === '' || adress === '' || geo.length !== 2){
       // console.log('empty fieild found')
       setEmsg('Please fill all the fields')
       setError(true)
@@ -74,6 +74,9 @@ export default function Listing({navigation}) {
           uploaded: Date.now(),
           geoloc: geo,
           verified: false
+        }).catch(()=>{
+          setEmsg('Failed to create the listing, try again')
+          setError(true)
         })
         clearInputs()
         setSmsg('Listing create succesfully')
