@@ -6,10 +6,6 @@ export default function ListingCard({data, index, remove, approve}) {
 
     const [more, setMore] = useState(false)
 
-    const toggle = ()=>{
-        // 
-    }
-
     return (
         <View style={styles.body}>
             <View style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between'}}>

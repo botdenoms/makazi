@@ -8,13 +8,17 @@ export default function LogIn({toggle}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [logging, setLogging] = useState(false)
+  const [error, setError] = useState(false)
+  const [emsg, setEmsg] = useState('')
 
   const logIn = ()=>{
+    setError(false)
+    setEmsg('')
     if (email === '' || password === '') {
-      console.log('empty email or pass')
+      setError(true)
+      setEmsg('empty email or pass!, try again')
       return
     }
-    console.log('no empty stuff')
     if (email === 'admin@gmail.com') {
       setLogging(true)
       // log in checks & create user obj
@@ -22,11 +26,17 @@ export default function LogIn({toggle}) {
         console.log(`signed in as ${e.user.email}`)
         setLogging(false)
         toggle(true)
+        setEmail('')
+        setPassword('')
       }).catch((e)=>{
-        console.log(`this error: ${e}`)
+        setError(true)
+        setLogging(false)
+        setEmsg('That email or password is invalid!, try again')
       })
     }else{
-      console.log('wrong email')
+      setError(true)
+      setLogging(false)
+      setEmsg('That email or password is invalid!, try again')
     }
     
   }
@@ -50,6 +60,12 @@ export default function LogIn({toggle}) {
         onChangeText={(t)=> setPassword(t)}
         value={password}
       />
+      {
+        error && 
+        <View style={styles.center}>
+          <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+        </View>
+      }
       <View style={styles.center}>
         <Pressable onPress={()=>logIn()}>
           <View style={styles.button}>

@@ -19,7 +19,7 @@ export default function Listing({navigation}) {
   const [county, setCounty] = useState('')
   const [adress, setAdress] = useState('')
   const [bed, setBed] = useState(1)
-  const [bath, setBath] = useState(1)
+  const [bath, setBath] = useState(0)
   const [rent, setRent] = useState(1)
   const [units, setUnits] = useState(1)
   const [images, setImages] = useState([])
@@ -30,6 +30,9 @@ export default function Listing({navigation}) {
   const [emsg, setEmsg] = useState('')
   const [sucess, setSucess] = useState(false)
   const [smsg, setSmsg] = useState('')
+  const [imagesCache, setImagesCache] = useState([])
+  const [upLoading, setUploading] = useState(false)
+  const [listing, setListing] = useState(false)
 
 
   const toggleAvail = ()=>{
@@ -49,10 +52,23 @@ export default function Listing({navigation}) {
   }
 
   const addListing = async () =>{
+    if(listing){
+      return
+    }
     setError(false)
     setSucess(false)
     // check if input fields are valid
-    if(images.length < 1 || descrip === '' || county === '' || adress === '' || geo.length !== 2){
+    if(images.length < 1 || imagesCache.length < 1){
+      setEmsg('Atleast one image required')
+      setError(true)
+      return
+    }
+    if(rent === 1 || units < 0){
+      setEmsg('units number cannot be zero')
+      setError(true)
+      return
+    }
+    if(descrip === '' || county === '' || adress === '' || geo.length !== 2){
       // console.log('empty fieild found')
       setEmsg('Please fill all the fields')
       setError(true)
@@ -60,28 +76,35 @@ export default function Listing({navigation}) {
       // create a listing
       if (auth().currentUser.uid !== null) {
         // console.log(`user id: ${auth().currentUser.uid}`)
-        const _documentRef = await ref.doc().set({
-          owner: auth().currentUser.uid,
-          description: descrip,
-          location: [county, adress],
-          price: Number(rent),
-          units: Number(units),
-          bathrooms: Number(bath),
-          bedrooms: Number(bed),
-          images,
-          rental,
-          availability: avail,
-          uploaded: Date.now(),
-          geoloc: geo,
-          verified: false
-        }).catch(()=>{
-          setEmsg('Failed to create the listing, try again')
+        if(imagesCache.length === images.length){
+          setListing(true)
+          const _documentRef = await ref.doc().set({
+            owner: auth().currentUser.uid,
+            description: descrip,
+            location: [county, adress],
+            price: Number(rent),
+            units: Number(units),
+            bathrooms: Number(bath),
+            bedrooms: Number(bed),
+            images,
+            rental,
+            availability: avail,
+            uploaded: Date.now(),
+            geoloc: geo,
+            verified: false
+          }).catch(()=>{
+            setEmsg('Failed to create the listing, try again')
+            setError(true)
+          })
+          setListing(false)
+          clearInputs()
+          setSmsg('Listing create succesfully')
+          setSucess(true)
+          // console.log(`doc id: ${documentRef}`)
+        }else{
+          setEmsg('File upload not finished, try again')
           setError(true)
-        })
-        clearInputs()
-        setSmsg('Listing create succesfully')
-        setSucess(true)
-        // console.log(`doc id: ${documentRef}`)
+        }
       }else{
         // console.log('no user found')
         setEmsg('no user found')
@@ -105,12 +128,22 @@ export default function Listing({navigation}) {
       } else { 
         // console.log(result)
         // console.log(`file path: ${result.assets[0].uri}`)
+        var t = {
+          name: result.assets[0].fileName,
+          url: result.assets[0].uri
+        }
+        setImagesCache([...imagesCache, t])
         const ref = parent.child(result.assets[0].fileName)
+        setUploading(true)
         ref.putFile(result.assets[0].uri).then(async (e)=>{
           const url = await ref.getDownloadURL()
           setImages([...images, url])
           setSmsg('File Uploaded succesfully')
           setSucess(true)
+          if(!upLoading){
+            setUploading(true)
+          }
+          setUploading(false)
           // console.log(`url path: ${url}`)
         })
       }
@@ -121,10 +154,13 @@ export default function Listing({navigation}) {
     <SafeAreaView>
         <View style={styles.body}>
             <View style={styles.appBar}>
-              <Pressable onPress={()=> navigation.goBack()}>
-                {/* <View style={styles.icon}></View> */}
-                <ChevronLeftIcon size={28} color='#1e1e1e'/>
-              </Pressable>
+              {
+                upLoading || listing ?
+                <ActivityIndicator size='small' color='blue'/>:
+                <Pressable onPress={()=> navigation.goBack()}>
+                  <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                </Pressable>
+              }
               <Text style={[{fontSize: 18}, styles.text]}>Add Listing</Text>
               <View style={{width: 28}}></View>
             </View>
@@ -150,17 +186,17 @@ export default function Listing({navigation}) {
               </View>
               <View style={{height: 150, width: '100%', paddingHorizontal: 10}}>
                 {
-                  images.length < 1?
+                  imagesCache.length < 1?
                   <View style={{justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%'}}>
                     <Text>no images uploaded</Text>
                   </View>
                   :<ScrollView horizontal={true}>
                   {
-                    images.map((u)=> {
+                    imagesCache.map((u, i)=> {
                       return (
-                        <View style={{width: 150, height: '100%', marginHorizontal: 2}} key={u}>
+                        <View style={{width: 150, height: '100%', marginHorizontal: 2}} key={i}>
                           <Image 
-                            source={{uri: u}} 
+                            source={{uri: u.url}} 
                             style={{width: '100%', height: '100%'}} 
                             progressiveRenderingEnabled={true}/>
                         </View>
@@ -237,14 +273,19 @@ export default function Listing({navigation}) {
                   <Text style={{color: 'red'}}>{emsg}</Text>
                 </View>
               }
-              <View style={{height: 30}}></View>
+              <View style={{height: 20}}></View>
               <View style={{justifyContent: 'center', alignItems:'center'}}>
                 <Pressable onPress={()=> addListing()}>
+                  {
+                    listing?
+                    <ActivityIndicator color='blue' size='small'/>:
                     <View style={styles.button}>
                       <Text style={styles.btncolor}>Publish</Text>
                     </View>
+                  }
                 </Pressable>
               </View>
+              <View style={{height: 30}}></View>
             </ScrollView>
         </View>
     </SafeAreaView>

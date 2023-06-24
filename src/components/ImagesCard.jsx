@@ -2,19 +2,19 @@ import { useState } from 'react'
 import { View, Text, StyleSheet, Pressable, Image} from 'react-native'
 import {ChevronLeftIcon, ChevronRightIcon} from "react-native-heroicons/solid"
 
-export default function ImagesCard({images}) {
+export default function ImagesCard({images=[]}) {
 
   const [index, setIndex] = useState(0)
 
   const upIndex = ()=>{
-    if (index >= images.length - 1) {
+    if (index === images.length - 1) {
       return
     }
     setIndex(index + 1)
   }
 
   const downIndex = ()=>{
-    if (index <= 0) {
+    if (index === 0) {
       return
     }
     setIndex(index - 1)
@@ -23,7 +23,7 @@ export default function ImagesCard({images}) {
   return (
     <View style={styles.card}>
       {
-        images.length < 1?
+        images.length === 0?
         <Text>No images</Text> 
         :<Image source={{uri : images[index]}} style={{height: '100%', width: '100%'}}/>
       }

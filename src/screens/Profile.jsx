@@ -73,10 +73,14 @@ export default function Profile({navigation}) {
                 }
                 setlistings([...temp])
                 setFetching(false)
+            }else{
+                setlistings([])
+                setFetching(false)
             }
         } else {
             setEmsg('This is wierd and impossible')
             setError(true)
+            setFetching(false)
         }
     }
 
@@ -167,15 +171,16 @@ export default function Profile({navigation}) {
                                     <Text>No listing posted</Text>
                                 </View>
                                 :listings.map((l, i)=> {
-                                return (
-                                <ListingCard 
-                                key={l.id} 
-                                data={l} 
-                                index={i} 
-                                remove={deleteListing} 
-                                status={statusChange}/>
-                                )
-                            })
+                                    return (
+                                        <ListingCard
+                                            key={l.id} 
+                                            data={l} 
+                                            index={i} 
+                                            remove={deleteListing} 
+                                            status={statusChange}
+                                        />
+                                    )
+                                })
                             }
                             <View style={{height: 10}}></View>
                         </ScrollView> 

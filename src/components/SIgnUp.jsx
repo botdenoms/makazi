@@ -47,6 +47,8 @@ export default function SIgnUp({toggle, stack}) {
         return
       })
       setSigning(false)
+      setEmail('')
+      setPassword('')
       stack.navigate('profile')
     })
     .catch(error => {

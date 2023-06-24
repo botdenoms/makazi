@@ -33,6 +33,8 @@ export default function LogIn({toggle, stack}) {
     auth().signInWithEmailAndPassword(email, password).then((e)=>{
       // console.log(`signed in as ${e.user.email}`)
       setLogging(false)
+      setEmail('')
+      setPassword('')
       stack.navigate('profile')
     }).catch((e)=>{
       // console.log(`this error: ${e}`)
