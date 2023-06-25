@@ -125,7 +125,7 @@ export default function Home({ navigation }) {
                 </ScrollView>
                 <View style={{width: '100%',justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 2}}>
                     <Pressable>
-                        <View style={[[styles.float, {backgroundColor: idx == 0?"#1e1e1e":"white"}]]}>
+                        <View style={[[styles.float, {backgroundColor: idx == 0?"green":"#1e1e1e"}]]}>
                             <HomeIcon size={28} color='#fff'/>
                             <Text style={{color: idx == 0?'#fff':'#1e1e1e'}}>Home</Text>
                         </View>
