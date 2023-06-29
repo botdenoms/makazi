@@ -91,8 +91,9 @@ export default function LogIn({toggle, stack}) {
       </View>
       <View style={{height: 20}}></View>
       <View style={styles.center}>
-        <Pressable onPress={()=>toggle()}>
-            <Text >Don't have an account, SingUp</Text>
+        <Pressable onPress={()=>toggle()} style={{flexDirection: 'row'}}>
+            <Text >Don't have an account,</Text>
+            <Text style={{color: 'green'}}> SingUp</Text>
         </Pressable>
       </View>
       <View style={{height: 20}}></View>
@@ -100,8 +101,9 @@ export default function LogIn({toggle, stack}) {
         reset?
         <></>:
         <View style={styles.center}>
-          <Pressable onPress={()=>setReset(true)}>
-              <Text >Forgot password, reset</Text>
+          <Pressable onPress={()=>setReset(true)} style={{flexDirection: 'row'}}>
+              <Text >Forgot password,</Text>
+              <Text style={{color: 'green'}}> Reset</Text>
           </Pressable>
         </View>
         

@@ -123,8 +123,9 @@ export default function SIgnUp({toggle, stack}) {
       </View>
       <View style={{height: 20}}></View>
       <View style={styles.center}>
-        <Pressable onPress={()=>toggle()}>
-          <Text >Already have an account, Login</Text>
+        <Pressable onPress={()=>toggle()} style={{flexDirection: 'row'}}>
+          <Text >Already have an account,</Text>
+          <Text style={{color: 'green'}}> Login</Text>
         </Pressable>  
       </View>
       {
