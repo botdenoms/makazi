@@ -2,22 +2,25 @@ import { View, Text, TextInput,Pressable, StyleSheet, ActivityIndicator} from 'r
 import {useState} from 'react'
 
 import auth from '@react-native-firebase/auth'
+import {ArrowRightIcon} from "react-native-heroicons/solid"
 
-export default function LogIn({toggle, stack}) {
+export default function LogIn({toggle, stack, reset=false, resetCallBack=false}) {
 
   // const [name, setName] = useState('')
   // const [telephone, setTelephone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [logging, setLogging] = useState(false)
-  const [reset, setReset] = useState(false)
   const [error, setError] = useState(false)
   const [emsg, setEmsg] = useState('')
   
   const logIn = ()=>{
     setError(false)
     if (reset){
-      setReset(false)
+      if(resetCallBack == false){
+        return
+      }
+      resetCallBack(false)
       return
     }
     if (email === '' || password === '') {
@@ -35,7 +38,7 @@ export default function LogIn({toggle, stack}) {
       setLogging(false)
       setEmail('')
       setPassword('')
-      stack.navigate('profile')
+      stack.replace('profile')
     }).catch((e)=>{
       // console.log(`this error: ${e}`)
       if (e.code === 'auth/invalid-email') {
@@ -58,9 +61,15 @@ export default function LogIn({toggle, stack}) {
 
   return (
     <View style={styles.body}>
+      <View style={{height: 20}}></View>
       <View style={styles.header}>
-        <Text style={{fontSize: 18}}>Welcome Back</Text>
+        <Text style={{fontSize: 24, color: 'white', fontWeight: '500'}}>
+          {reset? 'Reset':'Welcome'}
+        </Text>
+        <Text style={{fontSize: 24, color: 'white', fontWeight: '500'}}>
+          {reset? 'Password':'Back'}</Text>
       </View>
+      <View style={{height: 60}}></View>
       <TextInput
         style={styles.input}
         placeholder="email@name.com"
@@ -79,25 +88,44 @@ export default function LogIn({toggle, stack}) {
           value={password}
         />
       }
+      <View style={{height: 20}}></View>
+      {
+        error && 
+        <View style={styles.center}>
+          <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+        </View>
+      }
+      <View style={{height: 20}}></View>
+      {/* button */}
       <View style={styles.center}>
         <Pressable onPress={()=>logIn()}>
-          <View style={styles.button}>
+          <View >
             {
-              logging? <ActivityIndicator color='white' size='small'/>
-              :<Text style={{color: 'white'}}>{reset?'Reset':'Log in'}</Text>
+              logging? <ActivityIndicator color='#1e1e1e' size='small'/>
+              :<View style={{flexDirection: 'row', alignItems: "center"}}>
+                <View style={{width: 10}}></View>
+                <Text style={{color: '#1e1e1e', fontSize: 18, fontWeight: '400'}}>
+                  {
+                    reset? 'Reset': 'Sign In'
+                  }
+                </Text>
+                <ArrowRightIcon size={28} color='green'/>
+              </View>
             }
           </View>
-      </Pressable>
+        </Pressable>
       </View>
-      <View style={{height: 20}}></View>
-      <View style={styles.center}>
-        <Pressable onPress={()=>toggle()} style={{flexDirection: 'row'}}>
-            <Text >Don't have an account,</Text>
-            <Text style={{color: 'green'}}> SingUp</Text>
+      {/* reset and change option */}
+      <View style={styles.ops}>
+        <Pressable onPress={()=>toggle()} >
+            <Text style={{color: 'white', fontWeight: '400'}}> Sing Up</Text>
+        </Pressable>
+        <Pressable onPress={()=> setReset(true)}  >
+            <Text style={{color: 'white', fontWeight: '400'}}>Forgot password</Text>
         </Pressable>
       </View>
       <View style={{height: 20}}></View>
-      {
+      {/* {
         reset?
         <></>:
         <View style={styles.center}>
@@ -107,13 +135,7 @@ export default function LogIn({toggle, stack}) {
           </Pressable>
         </View>
         
-      }
-      {
-        error && 
-        <View style={styles.center}>
-          <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
-        </View>
-      }
+      } */}
     </View>
   )
 }
@@ -121,37 +143,29 @@ export default function LogIn({toggle, stack}) {
 const styles = StyleSheet.create({
   body:{
     // paddingVertical: 10,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 4
   },
   center:{
     flexDirection: 'row',
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 10,
   },
   header:{
     marginHorizontal: 20,
     marginVertical: 10,
-    flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   input:{
     height: 40,
-    borderRadius: 5,
+    // borderRadius: 5,
+    // borderWidth: 1,
     borderColor: '#1e1e1e',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     paddingLeft: 10,
     marginVertical: 5,
     marginHorizontal: 20
-  },
-  button:{
-    borderRadius: 10,
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 10,
-    backgroundColor: '#1e1e1e',
-    marginHorizontal: 20,
-    justifyContent: "center",
-    alignItems:"center"
   }
 })

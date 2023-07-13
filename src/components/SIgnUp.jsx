@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Text, StyleSheet, TextInput, Pressable, ActivityIndicator } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import {ArrowRightIcon} from "react-native-heroicons/solid"
 
 export default function SIgnUp({toggle, stack}) {
 
@@ -49,7 +50,7 @@ export default function SIgnUp({toggle, stack}) {
       setSigning(false)
       setEmail('')
       setPassword('')
-      stack.navigate('profile')
+      stack.replace('profile')
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -80,8 +81,11 @@ export default function SIgnUp({toggle, stack}) {
   return (
     <View style={styles.body}>
       <View style={styles.header}>
-        <Text style={{fontSize: 18}}>Welcome to Makazi</Text>
+        <Text style={{fontSize: 24, color: 'white', fontWeight: '500'}}>create</Text>
+        <Text style={{fontSize: 24, color: 'white', fontWeight: '500'}}>Account</Text>
       </View>
+      <View style={{height: 20}}></View>
+      {/* fields */}
       <TextInput
         style={styles.input}
         placeholder="Name" 
@@ -109,31 +113,37 @@ export default function SIgnUp({toggle, stack}) {
         onChangeText={(t)=> setPassword(t)}
         value={password}
       />
-      <View style={{height: 40}}></View>
+      <View style={{height: 20}}></View>
+      {
+        error && 
+        <View style={styles.center}>
+          <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
+        </View>
+      }
+      <View style={{height: 10}}></View>
+      {/* button */}
       <View style={styles.center}>
         <Pressable onPress={()=> signUp()}>
-          <View style={styles.button}>
+          <View>
             {
               signing?
               <ActivityIndicator color='white' size='small'/>
-              :<Text style={{color: 'white'}}>SignUp</Text>
+              :<View >
+                {
+                  signing? <ActivityIndicator color='#1e1e1e' size='small'/>
+                  :<View style={{flexDirection: 'row', alignItems: "center"}}>
+                    <View style={{width: 10}}></View>
+                    <Text style={{color: 'white', fontSize: 18, fontWeight: '400'}}>Sign Up</Text>
+                    <View style={{width: 10}}></View>
+                    <ArrowRightIcon size={28} color='white'/>
+                  </View>
+                }
+              </View>
             }
           </View>
-      </Pressable>
+        </Pressable>
       </View>
       <View style={{height: 20}}></View>
-      <View style={styles.center}>
-        <Pressable onPress={()=>toggle()} style={{flexDirection: 'row'}}>
-          <Text >Already have an account,</Text>
-          <Text style={{color: 'green'}}> Login</Text>
-        </Pressable>  
-      </View>
-      {
-      error && 
-      <View style={styles.center}>
-        <Text style={{color: 'red', margin: 20}}>{emsg}</Text>
-      </View>
-      }
     </View>
   )
 }
@@ -141,26 +151,27 @@ export default function SIgnUp({toggle, stack}) {
 const styles = StyleSheet.create({
   body:{
     // paddingVertical: 10,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 4
   },
   center:{
     flexDirection: 'row',
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center"
   },
   header:{
     marginHorizontal: 20,
     marginVertical: 10,
-    flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   input:{
     height: 40,
-    borderRadius: 5,
+    // borderRadius: 5,
+    // borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#1e1e1e',
     paddingLeft: 10,
-    borderWidth: 1,
     marginVertical: 5,
     marginHorizontal: 20
   },

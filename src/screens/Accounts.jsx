@@ -1,37 +1,67 @@
 import { useState } from 'react'
-import { View, StyleSheet, SafeAreaView, Pressable } from 'react-native'
+import { View, StyleSheet, SafeAreaView, Pressable, Image, Text, ScrollView} from 'react-native'
 import LogIn from '../components/LogIn'
 import SIgnUp from '../components/SIgnUp'
 
 import { ChevronLeftIcon } from "react-native-heroicons/solid"
 
 export default function Accounts({navigation}) {
-    const [user, setUser] = useState(false)
+    const [user, setUser] = useState(true)
+    const [reset, setReset] = useState(false)
     const toggle = ()=>{
+        if(reset && !user){
+            setUser(false)
+            setReset(false)
+            return
+        }
         setUser(!user)
     }
 
     const exit = ()=>{
-        if (user){
-            navigation.goBack()
-        }else{
-            navigation.navigate('Home')
-        }
+        navigation.goBack()
     }
     return (
         <SafeAreaView>
             <View style={styles.body}>
                 <View style={styles.appBar}>
                     <Pressable onPress={()=> exit()}>
-                        {/* <View style={styles.icon}></View> */}
-                        <ChevronLeftIcon size={28} color='#1e1e1e'/>
+                        <ChevronLeftIcon size={28} color='white'/>
                     </Pressable>
                 </View>
-                {
-                    user == true?
-                    <LogIn toggle={toggle} stack={navigation}/>
-                    :<SIgnUp toggle={toggle} stack={navigation}/>
-                }
+                
+                <Image 
+                    source={
+                        user?
+                        require('../components/login.jpeg'):
+                        require('../components/signup.jpeg') 
+                    } 
+                    style={styles.image}
+                    resizeMode='cover'
+                />
+                <ScrollView style={{flex: 1, zIndex:4}}>
+                    {
+                        user == true?
+                        <LogIn toggle={toggle} stack={navigation} reset={reset} resetCallBack={setReset}/>
+                        :<SIgnUp toggle={toggle} stack={navigation}/>
+                    }
+                    <View style={{height: 30}}></View>
+                    <View style={styles.ops}>
+                        <Pressable onPress={()=>toggle()} >
+                            <Text style={{color: '#1e1e1e', fontWeight: '800'}}>
+                                {
+                                    !user?'Sing In':'Sign Up'
+                                }
+                            </Text>
+                        </Pressable>
+                        {
+                            user && !reset &&
+                            <Pressable onPress={()=> setReset(true)}  >
+                                <Text style={{color: '#1e1e1e', fontWeight: '800'}}>Forgot password</Text>
+                            </Pressable>
+                        }
+                    </View>
+                    <View style={{height: 20}}></View>
+                </ScrollView>
             </View>
         </SafeAreaView>
     )
@@ -41,25 +71,34 @@ const styles = StyleSheet.create({
     body:{
         width: '100%',        
         height: '100%',
-        backgroundColor: 'white'
+        backgroundColor: 'transparent',
+        zIndex: 5,
     },
     appBar:{
         height: 50,
-        // backgroundColor: 'red',
+        backgroundColor: 'transparent',
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        zIndex: 4,
     },
-    icon:{
+    image:{
+        position: 'absolute',
+        height: '100%', 
+        width: '100%',
+        zIndex: 0
+    },
+    ops:{
         // position: 'absolute',
-        left: 20,
-        top: 10,
-        height: 28,
-        width: 28,
-        borderRadius: 14,
-        backgroundColor: 'green'
-    },
+        // bottom: 0,
+        width: '100%',
+        zIndex: 4,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        marginBottom: 50
+    }
 })
